@@ -54,11 +54,6 @@ const inserirNovoFilme = async function (filme, contentType) {
     }
 
 
-
-
-
-
-
 }
 
 
