@@ -16,14 +16,18 @@ const DEFAULT_MESSAGE = {
     response: {}
 }
 
-// Função para mostrar mensagens de ERRO do projeto filmes.
-const ERROR_BAD_REQUEST = {status: false, status_code: 400, message: 'Não foi possível processar a requisição devido a erros de entrada de dados.'}
+// Funções para retornar as mensagens de ERRO da API
+const ERROR_BAD_REQUEST             = {status: false, status_code: 400, message: 'Não foi possível processar a requisição devido a erros de entrada de dados.'}
 
-// Função para mostrar mensagens de SUCESSO do projeto filmes
+const ERROR_CONTENT_TYPE            = {status: false, status_code: 415, message: 'Não foi possível processar a requisição pois o formado de dados encaminhado não é suportado pelo servidor, apenas deve ser utilizado JSON!'}
+
+const ERROR_INTERNAL_SERVER_MODEL   = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [MODEL]'}
+
+const ERROR_INTERNAL_SERVER_CONTROLLER  = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [CONTROLLER]'}
+
+// Funções para retornar as mensagens de SUCESSO da API
 const SUCCESS_CREATE_ITEM = {status: true, status_code: 201, message: 'Item inserido com sucesso!'}
 
-// Função para mostrar mensagens de ERRO INTERNO DO SERVER MODEL do projeto filmes.
-const ERROR_INTERNAL_SERVER_MODEL = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [MODEL]'}
 
 
 
@@ -31,6 +35,8 @@ const ERROR_INTERNAL_SERVER_MODEL = {status: false, status_code: 500, message: '
 module.exports = {
     DEFAULT_MESSAGE,
     ERROR_BAD_REQUEST,
-    SUCCESS_CREATE_ITEM,
+    ERROR_CONTENT_TYPE,
     ERROR_INTERNAL_SERVER_MODEL,
+    ERROR_INTERNAL_SERVER_CONTROLLER,
+    SUCCESS_CREATE_ITEM,
 }
