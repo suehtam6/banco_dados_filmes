@@ -35,6 +35,7 @@ app.use(cors(corsOptions))
 
 // ENDPOINTS
 
+// endpoint para cadastrar o filme
 app.post('/v1/senai/locadora/filme',bodyParserJSON, async function(request, response){
    // Recebendo o body da requisição
     let  dados = request.body
@@ -50,7 +51,23 @@ app.post('/v1/senai/locadora/filme',bodyParserJSON, async function(request, resp
     response.json(result)
 })
 
+// endpoint para pegar todos os filmes
+app.get('/v1/senai/locadora/filme', async function(request, response){
+    let result = await controllerFilme.listarFilme()
 
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para pegar um filme pelo id
+app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result = await controllerFilme.buscarFilme(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
 
 
 

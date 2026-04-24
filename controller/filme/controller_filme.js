@@ -58,19 +58,89 @@ const inserirNovoFilme = async function (filme, contentType) {
 
 
 // Função para atualizar um filme existente.
-const atualizarFilme = async function (filme) {
+const atualizarFilme = async function () {
+
 }
 
 // Função para retornar todos os filmes existentes.
-const listarFilme = async function (filme) {
+const listarFilme = async function () {
+
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
+
+    try {
+        // Solicitando a função do selectALLFilme que está dentro do DAO.
+        let result = await filmeDAO.selectAllFilme()
+
+        // Validação para verificar se o DAO conseguiu processar o script no BD.
+        if (result) {
+
+            // Validação para verificar se o conteúdo do ARRAY tem dados de retorno ou se está vazio
+            if (result.length > 0) {
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code // RETORNA UM 200
+                customMessage.DEFAULT_MESSAGE.response.count = result.length
+                customMessage.DEFAULT_MESSAGE.response.filme = result
+
+                return customMessage.DEFAULT_MESSAGE
+            } else {
+                return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
+            }// fecha  if sobre o conteúdo.
+
+        } else {
+            return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500
+        } // fecha if sobre se o DAO conseguiu processar o script.
+
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500
+    } // fecha o try
 }
 
 // Função para buscar um filme filtrando pelo id.
 const buscarFilme = async function (id) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
+    try {
+
+        // validação para garantir que o ID seja um argumento valido
+        if (String(id).replaceAll(' ', '') == '' || id == null || id == undefined || isNaN(id)) {
+            
+            customMessage.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
+            return customMessage.ERROR_BAD_REQUEST // RETORNA UM 400
+            
+        }else{
+
+            // Pesquisando o filme pelo id
+            let result = await filmeDAO.selectByIdFilme(id)
+
+            // Validação para saber se tem algum erro na MODEL
+            if (result) {
+
+                // Validação para saber se o result tem o item pedido cadastrado.
+                if(result.length > 0){
+                    customMessage.DEFAULT_MESSAGE.status            = customMessage.SUCCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code       = customMessage.SUCCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.response.filme    = result
+
+                return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
+
+                }else{
+                    return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
+                } // fecha if sobre se o item retornou
+
+            }else{
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500(MODEL)
+            } // fecha validação
+
+        } // fecha validação id
+
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500(CONTROLLER)
+    }
 }
 
 // Função para excluir um filme.
-const excluirFilme = async function (filme) {
+const excluirFilme = async function (id) {
 }
 
 // Função para validar dados.
@@ -80,7 +150,7 @@ const validarDados = async function (filme) {
     // Ele converte um objeto para string e depois transforma em um outro objeto.
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
-    if (filme.nome == '' || filme.nome == null || filme.nome == undefined || filme.nome.length > 80) {
+    if(filme.nome == '' || filme.nome == null || filme.nome == undefined || filme.nome.length > 80) {
         customMessage.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     } else if (filme.sinopse == '' || filme.sinopse == null || filme.sinopse == undefined) {

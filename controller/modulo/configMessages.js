@@ -17,16 +17,21 @@ const DEFAULT_MESSAGE = {
 }
 
 // Funções para retornar as mensagens de ERRO da API
-const ERROR_BAD_REQUEST             = {status: false, status_code: 400, message: 'Não foi possível processar a requisição devido a erros de entrada de dados.'}
+const ERROR_BAD_REQUEST                 = {status: false, status_code: 400, message: 'Não foi possível processar a requisição devido a erros de entrada de dados.'}
 
-const ERROR_CONTENT_TYPE            = {status: false, status_code: 415, message: 'Não foi possível processar a requisição pois o formado de dados encaminhado não é suportado pelo servidor, apenas deve ser utilizado JSON!'}
+const ERROR_CONTENT_TYPE                = {status: false, status_code: 415, message: 'Não foi possível processar a requisição pois o formado de dados encaminhado não é suportado pelo servidor, apenas deve ser utilizado JSON!'}
 
-const ERROR_INTERNAL_SERVER_MODEL   = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [MODEL]'}
+const ERROR_INTERNAL_SERVER_MODEL       = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [MODEL]'}
 
 const ERROR_INTERNAL_SERVER_CONTROLLER  = {status: false, status_code: 500, message: 'Não foi possível processar a requisição devido a um erro interno no servidor [CONTROLLER]'}
 
+const ERROR_NOT_FOUND                   = {status: false, status_code: 404, message: 'Não foram encontrados dados para retorno.'}
+
+
 // Funções para retornar as mensagens de SUCESSO da API
 const SUCCESS_CREATE_ITEM = {status: true, status_code: 201, message: 'Item inserido com sucesso!'}
+
+const SUCCESS_RESPONSE    = {status: true, status_code: 200}
 
 
 
@@ -38,5 +43,7 @@ module.exports = {
     ERROR_CONTENT_TYPE,
     ERROR_INTERNAL_SERVER_MODEL,
     ERROR_INTERNAL_SERVER_CONTROLLER,
+    ERROR_NOT_FOUND,
     SUCCESS_CREATE_ITEM,
+    SUCCESS_RESPONSE,
 }

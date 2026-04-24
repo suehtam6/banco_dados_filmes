@@ -45,8 +45,18 @@ insert into tbl_filme(
     '2026-04-02',
     '01:39:00',
     '50.60',
-    '3'
+    if('', null, 2)
     
 );
 
+# Mostrando todos os filmes cadastrados na tabela
 select * from tbl_filme;
+
+# Mostrando todos os filmes cadastrados na tabela de forma decrescente
+select * from tbl_filme order by id desc;
+
+# Buscando por id o filme
+#select * from tbl_filme where id =	if('', null, 2) ;
+
+# Permite apagar todos os registros da tabela aonde o id é maior que 1
+#delete from tbl_filme where id > 0;
