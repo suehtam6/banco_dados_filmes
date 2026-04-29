@@ -38,9 +38,7 @@ insert into tbl_filme(
 
 )values(
 	'Super Mario Galaxy: O Filme',
-    'Uma nova aventura leva Mario a enfrentar um inédito e ameaçador super vilão. Em Super Mario Galaxy: O Filme,
-    o bigodudo encanador italiano e seus aliados embarcam numa aventura galáctica repleta de ação e 
-    momentos emocionantes depois de salvar o Reino dos Cogumelos.',
+    'Uma nova aventura leva Mario a enfrentar um inédito e ameaçador super vilão. Em Super Mario Galaxy: O Filme, o bigodudo encanador italiano e seus aliados embarcam numa aventura galáctica repleta de ação e momentos emocionantes depois de salvar o Reino dos Cogumelos.',
     'https://br.web.img3.acsta.net/c_310_420/img /5b/ea/5bea1aeac3323aeaaf82449a34fafbbf.jpg',
     '2026-04-02',
     '01:39:00',
@@ -59,4 +57,22 @@ select * from tbl_filme order by id desc;
 #select * from tbl_filme where id =	if('', null, 2) ;
 
 # Permite apagar todos os registros da tabela aonde o id é maior que 1
-#delete from tbl_filme where id > 0;
+#delete from tbl_filme where id=52;
+
+#---------------------------------- DIA 2026-04-29 --------------------------------------#
+
+#Fazendo a tabela de update, ela pode ser considerada bem perigosa caso você não fale qual 
+# tabela gostaria de atualizar, ela irá mudar todos os nomes sem acessão.
+# NUNCA ESQUECER DE UTILIZAR O WHERE PARA EVITAR ERROS!!
+update tbl_filme set
+	nome = 'Filme 03',
+    sinopse = 'teste',
+    capa = 'teste.png',
+    data_lancamento = '2026-04-29',
+    duracao = '01:50:00',
+    valor = '10',
+    avaliacao = '5'
+    where id = 53;
+    
+    
+#---------------------------------- DIA 2026-04-29 --------------------------------------#

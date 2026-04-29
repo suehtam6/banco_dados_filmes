@@ -61,7 +61,30 @@ const insertFilme = async function (filme) {
 
 // Função para atualizar um filme existente no banco de dados
 const updateFilme = async function (filme) {
+    try {
 
+        let sql = `update tbl_filme set
+                    nome            = '${filme.nome}',
+                    sinopse         = '${filme.sinopse}',
+                    capa            = '${filme.capa}',
+                    data_lancamento = '${filme.data_lancamento}',
+                    duracao         = '${filme.duracao}',
+                    valor           = '${filme.valor}',
+                    avaliacao       = if('${filme.avaliacao}' = '', null , '${filme.avaliacao}')
+                    where id        = ${filme.id};`
+
+        let result = await knexConection.raw(sql)
+
+        // Verificando se o result é verdadeiro ou não.
+        if (result) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
 }
 
 // Função para retornar todos os dados de filmes do banco de dados
@@ -73,12 +96,12 @@ const selectAllFilme = async function () {
         // Executa no BD o script e guarda o retorno do BD,
         // Pode ser um ERRO(false) ou um ARRAY com os dados.
         let result = await knexConection.raw(sql)
-        
+
         // Verificando se o que está retornando é um ARRAY ou não.
-        if(Array.isArray(result)){
+        if (Array.isArray(result)) {
             return result[0] // Retorna somente o índice com a lista de filmes.
-            
-        }else{
+
+        } else {
             return false
         }
 
@@ -95,18 +118,19 @@ const selectByIdFilme = async function (id) {
         let sql = `select * from tbl_filme where id=${id};`
 
         let result = await knexConection.raw(sql)
-        
-       
-        if(Array.isArray(result)){
-            return result[0] 
-            
-        }else{
+
+
+        if (Array.isArray(result)) {
+            return result[0]
+
+        } else {
             return false
         }
 
     } catch (error) {
         return false
     }
+
 }
 
 // Função para deletar um filme existente no banco de dados através do ID
@@ -114,11 +138,10 @@ const deleteFilme = async function (id) {
     try {
         let sql = `delete from tbl_filme where id=${id};`
 
-        let result = await knexConection(sql)
-
-        if(Array.isArray(result)){
-            return result[0]
-        }else{
+        let result = await knexConection.raw(sql)
+        if (result) {
+            return true
+        } else {
             return false
         }
 
@@ -127,11 +150,12 @@ const deleteFilme = async function (id) {
     }
 }
 
+
 module.exports = {
     insertFilme,
     updateFilme,
     selectAllFilme,
     selectByIdFilme,
-    deleteFilme
+    deleteFilme,
 }
 

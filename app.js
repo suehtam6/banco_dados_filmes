@@ -45,7 +45,6 @@ app.post('/v1/senai/locadora/filme',bodyParserJSON, async function(request, resp
     let contentType = request.headers['content-type']
 
     let result = await controllerFilme.inserirNovoFilme(dados, contentType)
-    
 
     response.status(result.status_code)
     response.json(result)
@@ -69,7 +68,33 @@ app.get('/v1/senai/locadora/filme/:id', async function(request, response) {
     response.json(result)
 })
 
+// endpoint para atualizar um filme
+app.put('/v1/senai/locadora/filme/:id', bodyParserJSON, async function(request, response) {
 
+    // Recebe o id do registro a ser atualizado.
+    let id = request.params.id
+
+    // Recebe os dados do body que serão modificados no banco de dados.
+    let dados = request.body
+
+    // Recebe o content-type da requisição para validar se é JSON.
+    let contentType = request.headers['content-type']
+
+    // Chama a função para atualizar o filme.
+    let result = await controllerFilme.atualizarFilme(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.delete('/v1/senai/locadora/filme/:id', async function (request, response){
+    let id = request.params.id
+
+    let result = await controllerFilme.excluirFilme(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
 
 
 

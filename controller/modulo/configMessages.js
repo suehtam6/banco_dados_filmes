@@ -33,8 +33,9 @@ const SUCCESS_CREATE_ITEM = {status: true, status_code: 201, message: 'Item inse
 
 const SUCCESS_RESPONSE    = {status: true, status_code: 200}
 
+const SUCCESS_UPDATED_ITEM = {status: true, status_code: 200, message: 'Item atualizado com sucesso!'}
 
-
+const SUCCESS_DELETED_ITEM = {status: true, status_code: 200, message: 'Item deletado com sucesso!'}
 
 
 module.exports = {
@@ -46,4 +47,6 @@ module.exports = {
     ERROR_NOT_FOUND,
     SUCCESS_CREATE_ITEM,
     SUCCESS_RESPONSE,
+    SUCCESS_UPDATED_ITEM,
+    SUCCESS_DELETED_ITEM,
 }
