@@ -79,7 +79,7 @@ app.put('/v1/senai/locadora/filme/:id', bodyParserJSON, async function(request, 
 
     // Recebe o content-type da requisição para validar se é JSON.
     let contentType = request.headers['content-type']
-
+    
     // Chama a função para atualizar o filme.
     let result = await controllerFilme.atualizarFilme(dados, id, contentType)
 

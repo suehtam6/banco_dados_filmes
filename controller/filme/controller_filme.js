@@ -205,32 +205,24 @@ const excluirFilme = async function (id) {
         // Verificando se existe esse ID no buscarFilme
         let resultBuscarFilme = await buscarFilme(id)
         if (resultBuscarFilme.status) {
-            
-            // Verificando se o JSON está correto
-            if (resultBuscarFilme) {
-                
                 let result = await filmeDAO.deleteFilme(id)
-                console.log(result)
+                
                 if (result) {
                     
                     customMessage.DEFAULT_MESSAGE.status        = customMessage.SUCCESS_DELETED_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code   = customMessage.SUCCESS_DELETED_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message       = customMessage.SUCCESS_DELETED_ITEM.message
                     
-                    return customMessage.DEFAULT_MESSAGE // RETORNA UM 204
+                    return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
 
                 } else {
                     
                     return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500(MODEL)
                 }
 
-            } else {
-                return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
-            }
-
 
         } else {
-            return resultBuscarFilme // RETORNA 400 (buscarFilme)
+            return resultBuscarFilme // RETORNA 400 ou 404 (buscarFilme)
         }
 
     } catch (error) {
@@ -238,7 +230,7 @@ const excluirFilme = async function (id) {
     }
 
 }
-excluirFilme()
+
 
 
 // Função para validar dados.

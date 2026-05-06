@@ -72,7 +72,11 @@ update tbl_filme set
     duracao = '01:50:00',
     valor = '10',
     avaliacao = '5'
-    where id = 53;
+    where id = 64;
     
+    #Permite deletar filmes utilizando o id
+    delete from tbl_filme where id=64;
     
+    select * from tbl_filme;
 #---------------------------------- DIA 2026-04-29 --------------------------------------#
+
