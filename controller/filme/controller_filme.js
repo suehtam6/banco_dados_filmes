@@ -30,8 +30,9 @@ const inserirNovoFilme = async function (filme, contentType) {
                 return validar // RETORNA UM 400
             } else {
 
+                let tratarFilme = await tratarDados(await tratarDados(filme))
                 // Encaminha os dados fo Filme para o DAO inserir no banco de dados.
-                let result = await filmeDAO.insertFilme(filme)
+                let result = await filmeDAO.insertFilme(tratarFilme)
                 if (result) { // RETORNA UM 201
 
                     // Cria o ID do JSON do filme e adiciona o ID gerado no DAO
@@ -85,7 +86,7 @@ const atualizarFilme = async function (filme, id, contentType) {
                         filme.id = Number(id)
 
                         // Chama a função para atualizar o filme no banco de dados.
-                        let result = await filmeDAO.updateFilme(filme)
+                        let result = await filmeDAO.updateFilme(await tratarDados(filme))
                         if (result) {
 
                             customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
@@ -266,17 +267,24 @@ const validarDados = async function (filme) {
         customMessage.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     } else {
-        filme.nome = replaceAll(filme.nome, "'", "")
-        filme.sinopse = replaceAll(filme.sinopse, "'", "")
-        filme.capa = replaceAll(filme.capa, "'", "")
-        filme.data_lancamento = replaceAll(filme.data_lancamento, "'", "")
-        filme.duracao = replaceAll(filme.duracao, "'", "")
-        filme.valor = replaceAll(filme.valor, "'", "")
-        filme.avaliacao = replaceAll(filme.avaliacao, "'", "")
+        
 
         return false
     }
 
+}
+
+const tratarDados = async function(filme) {
+    //tratamento para evitar a chegada das aspas(') como caracter inválido
+    filme.nome              = filme.nome.replaceAll("'", "")
+    filme.sinopse           = filme.sinopse.replaceAll("'", "")
+    filme.capa              = filme.capa.replaceAll("'", "")
+    filme.data_lancamento   = filme.data_lancamento.replaceAll("'", "")
+    filme.duracao           = filme.duracao.replaceAll("'", "")
+    filme.valor             = filme.valor.replaceAll("'", "")
+    filme.avaliacao         = filme.avaliacao.replaceAll("'", "")
+
+    return filme
 }
 
 module.exports = {
