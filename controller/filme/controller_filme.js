@@ -33,10 +33,13 @@ const inserirNovoFilme = async function (filme, contentType) {
                 // Encaminha os dados fo Filme para o DAO inserir no banco de dados.
                 let result = await filmeDAO.insertFilme(filme)
                 if (result) { // RETORNA UM 201
+
+                    // Cria o ID do JSON do filme e adiciona o ID gerado no DAO
+                    filme.id = result
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATE_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATE_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATE_ITEM.message
-
+                    customMessage.DEFAULT_MESSAGE.response = filme
                     return customMessage.DEFAULT_MESSAGE // RETORNA UM 201
 
                 } else { // retorna um 500(MODEL)
@@ -88,6 +91,7 @@ const atualizarFilme = async function (filme, id, contentType) {
                             customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
                             customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                             customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_UPDATED_ITEM.message
+                            customMessage.DEFAULT_MESSAGE.response = filme
                             return customMessage.DEFAULT_MESSAGE //RETORNA 200
 
                         } else {
@@ -262,6 +266,14 @@ const validarDados = async function (filme) {
         customMessage.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     } else {
+        filme.nome = replaceAll(filme.nome, "'", "")
+        filme.sinopse = replaceAll(filme.sinopse, "'", "")
+        filme.capa = replaceAll(filme.capa, "'", "")
+        filme.data_lancamento = replaceAll(filme.data_lancamento, "'", "")
+        filme.duracao = replaceAll(filme.duracao, "'", "")
+        filme.valor = replaceAll(filme.valor, "'", "")
+        filme.avaliacao = replaceAll(filme.avaliacao, "'", "")
+
         return false
     }
 

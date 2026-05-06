@@ -45,7 +45,7 @@ const insertFilme = async function (filme) {
         let result = await knexConection.raw(sql)
 
         if (result) {
-            return true
+            return result[0].insertId
         } else {
             return false
         }
@@ -77,7 +77,7 @@ const updateFilme = async function (filme) {
 
         // Verificando se o result é verdadeiro ou não.
         if (result) {
-            return true
+            return true // Retornando o ID gerado no insert
         } else {
             return false
         }
@@ -86,6 +86,8 @@ const updateFilme = async function (filme) {
         return false
     }
 }
+
+insertFilme()
 
 // Função para retornar todos os dados de filmes do banco de dados
 const selectAllFilme = async function () {
