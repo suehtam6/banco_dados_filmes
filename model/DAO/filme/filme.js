@@ -57,8 +57,6 @@ const insertFilme = async function (filme) {
 
 } // fecha a insertFilme
 
-
-
 // Função para atualizar um filme existente no banco de dados
 const updateFilme = async function (filme) {
     try {
@@ -87,8 +85,6 @@ const updateFilme = async function (filme) {
     }
 }
 
-insertFilme()
-
 // Função para retornar todos os dados de filmes do banco de dados
 const selectAllFilme = async function () {
     try {
@@ -111,7 +107,6 @@ const selectAllFilme = async function () {
         return false
     }
 }
-
 
 // Função para selecionar um filme através do ID do filme
 const selectByIdFilme = async function (id) {

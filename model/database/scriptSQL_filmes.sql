@@ -80,3 +80,25 @@ update tbl_filme set
     select * from tbl_filme;
 #---------------------------------- DIA 2026-04-29 --------------------------------------#
 
+#---------------------------------- DIA 2026-05-08 --------------------------------------#
+
+#Criando tabela de genero
+create table tbl_genero(
+	id int not null  auto_increment primary key,
+    genero varchar(15) not null
+);
+
+insert into tbl_genero(
+	genero
+)values(
+	replace("terror", "'", "")
+);
+
+create table tbl_classificacao(
+	id int not null auto_increment primary key,
+    classificacao varchar(8) not null
+);
+
+
+#---------------------------------- DIA 2026-05-08 --------------------------------------#
+
