@@ -11,8 +11,11 @@ const cors          = require('cors')
 const bodyParser    = require('body-parser')
 
 // Import das controllers do projeto
-const controllerFilme = require('./controller/filme/controller_filme.js')
-const controllerGenero = require('./controller/genero/controller_genero.js')
+const controllerFilme           = require('./controller/filme/controller_filme.js')
+const controllerGenero          = require('./controller/genero/controller_genero.js')
+const controllerClassificacao   = require('./controller/classificacao/classificacao.js')
+
+
 
 // Permitindo a utilização do JSON no body das requisições.
 const bodyParserJSON = bodyParser.json()
@@ -33,9 +36,10 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 
+
 // ENDPOINTS SOBRE O FILME
 
-// endpoint para cadastrar o filme
+// endpoint para o CRUD do filme
 app.post('/v1/senai/locadora/filme',bodyParserJSON, async function(request, response){
    // Recebendo o body da requisição
     let  dados = request.body
@@ -96,11 +100,9 @@ app.delete('/v1/senai/locadora/filme/:id', async function (request, response){
     response.json(result)
 })
 
-
-
 // ENDPOINTS SOBRE O GÊNERO
 
-// endpoint para cadastrar os gêneros
+// endpoint para o CRUD do gênero
 app.post('/v1/senai/locadora/genero',bodyParserJSON, async function(request, response){
     // Recebendo o body da requisição
      let  dados = request.body
@@ -157,6 +159,59 @@ app.delete('/v1/senai/locadora/genero/:id', async function(request, response) {
     let id = request.params.id
 
     let result = await controllerGenero.excluirGenero(id)
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// ENDPOINTS SOBRE A CLASSIFICAÇÃO
+
+// endpoint para CRUD da classificação
+app.post('/v1/senai/locadora/classificacao',bodyParserJSON, async function(request, response){
+    // Recebendo o body da requisição
+     let  dados = request.body
+ 
+ 
+     // Recebendo o tipo de dados da requisição para validar se é JSON.
+     let contentType = request.headers['content-type']
+ 
+     let result = await controllerClassificacao.inserirNovaClassificacao(dados, contentType)
+ 
+     response.status(result.status_code)
+     response.json(result)
+ })
+
+// endpoint para listar os gêneros
+app.get('/v1/senai/locadora/classificacao', async function(request, response) {
+    let result = await controllerClassificacao.listarClassificacao()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para listar os gêneros
+app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllerClassificacao.buscarClassificacao(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para atualizar um filme
+app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(request, response) {
+
+    // Recebe o id do registro a ser atualizado.
+    let id = request.params.id
+
+    // Recebe os dados do body que serão modificados no banco de dados.
+    let dados = request.body
+
+    // Recebe o content-type da requisição para validar se é JSON.
+    let contentType = request.headers['content-type']
+    
+    // Chama a função para atualizar o filme.
+    let result = await controllerClassificacao.atualizarClassificacao(dados, id, contentType)
+
     response.status(result.status_code)
     response.json(result)
 })
