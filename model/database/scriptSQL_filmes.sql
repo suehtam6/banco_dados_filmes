@@ -94,11 +94,71 @@ insert into tbl_genero(
 	replace("terror", "'", "")
 );
 
+update tbl_genero set
+	genero = 'Comedia'
+    where id = 1;
+
+select * from tbl_genero order by id desc;
+
+#delete from tbl_genero where id=1;
+
+show tables;
+
+#Criando tabela de classificacao
 create table tbl_classificacao(
 	id int not null auto_increment primary key,
     classificacao varchar(8) not null
 );
 
+insert into tbl_classificacao(
+	classificacao
+)values(
+	classificacao = 'livre'
+);
+
+select * from tbl_classificacao order by id desc;
+
+update tbl_classificacao set
+	classificacao = '10'
+    where id=1;
+
 
 #---------------------------------- DIA 2026-05-08 --------------------------------------#
+
+#---------------------------------- DIA 2026-05-13 --------------------------------------#
+
+create table tbl_profissional(
+	id	int not null auto_increment primary key,
+    nome varchar(80) not null,
+    data_nascimento date not null,
+    foto varchar(255) not null,
+    biografia text 
+    
+);
+
+insert into tbl_profissional(
+	nome,
+    data_nascimento,
+    foto,
+    biografia
+)values(
+	replace("Matheus Lucas", "'", ""),
+    '2026-05-16',
+    'Matheus.png',
+    'Olá, me chamo Matheus e estou desenvolvendo este projeto'
+);
+
+update tbl_profissional set
+	nome 			= replace("Matheus Lucas", "'", ""),
+	data_nascimento = '2026-05-16',
+    foto 			= 'Matheus.png',
+    biografia 		= 'Olá, me chamo Matheus e estou desenvolvendo este projeto!!'
+		where id = 1;
+        
+select * from tbl_profissional order by id desc;
+
+select * from tbl_profissional where id = 1;
+        
+
+#---------------------------------- DIA 2026-05-13 --------------------------------------#
 
