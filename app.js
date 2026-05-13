@@ -14,7 +14,7 @@ const bodyParser    = require('body-parser')
 const controllerFilme           = require('./controller/filme/controller_filme.js')
 const controllerGenero          = require('./controller/genero/controller_genero.js')
 const controllerClassificacao   = require('./controller/classificacao/controllerClassificacao.js')
-
+const controllerProfissional    = require('./controller/profissional/controllerProfissional.js')
 
 
 // Permitindo a utilização do JSON no body das requisições.
@@ -201,7 +201,7 @@ app.get('/v1/senai/locadora/classificacao/:id', async function(request, response
     response.json(result)
 })
 
-// endpoint para atualizar um classificação
+// endpoint para atualizar uma classificação
 app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
@@ -215,7 +215,7 @@ app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(r
     
     // Chama a função para atualizar o filme.
     let result = await controllerClassificacao.atualizarClassificacao(dados, id, contentType)
-    console.log(result.status_code)
+    
     response.status(result.status_code)
     response.json(result)
 })
@@ -229,6 +229,61 @@ app.delete('/v1/senai/locadora/classificacao/:id', async function(request, respo
     response.json(result)
 })
 
+
+
+// ENDPOINTS SOBRE O PROFISSIONAL
+
+// endpoint para inserir um profissional
+app.post('/v1/senai/locadora/profissional',bodyParserJSON, async function(request, response){
+    // Recebendo o body da requisição
+     let  dados = request.body
+ 
+ 
+     // Recebendo o tipo de dados da requisição para validar se é JSON.
+     let contentType = request.headers['content-type']
+ 
+     let result = await controllerProfissional.inserirNovoProfissional(dados, contentType)
+ 
+     response.status(result.status_code)
+     response.json(result)
+ })
+
+
+ // endpoint para listar por ID o Profissonal
+app.get('/v1/senai/locadora/profissional/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllerProfissional.buscarProfissional(id)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+// endpoint para atualizar um Profissional
+app.put('/v1/senai/locadora/profissional/:id', bodyParserJSON, async function(request, response) {
+
+    // Recebe o id do registro a ser atualizado.
+    let id = request.params.id
+
+    // Recebe os dados do body que serão modificados no banco de dados.
+    let dados = request.body
+
+    // Recebe o content-type da requisição para validar se é JSON.
+    let contentType = request.headers['content-type']
+    
+    // Chama a função para atualizar o filme.
+    let result = await controllerProfissional.atualizarProfissional(dados, id, contentType)
+    
+    response.status(result.status_code)
+    response.json(result)
+})
+
+app.get('/v1/senai/locadora/profissional', async function(request, response) {
+
+    let result = await controllerProfissional.listarProfissional()
+    response.status(result.status_code)
+    response.json(result)
+    
+})
 
 
 

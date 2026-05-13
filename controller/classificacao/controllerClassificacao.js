@@ -108,7 +108,7 @@ const listarClassificacao = async function () {
                                 customMessage.DEFAULT_MESS = customMessage.SUCCESS_RESPONSE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                 customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_RESPONSE.message
-                customMessage.DEFAULT_MESSAGE.response = result
+                customMessage.DEFAULT_MESSAGE.response.classificacao = result
 
                 return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
             }else{
@@ -139,7 +139,7 @@ const buscarClassificacao = async function (id) {
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_RESPONSE.message
-                    customMessage.DEFAULT_MESSAGE.response = result
+                    customMessage.DEFAULT_MESSAGE.response.classificacao = result
                     return customMessage.DEFAULT_MESSAGE
                 }else{
                     return customMessage.ERROR_NOT_FOUND // Retorna um 404
