@@ -13,7 +13,7 @@ const bodyParser    = require('body-parser')
 // Import das controllers do projeto
 const controllerFilme           = require('./controller/filme/controller_filme.js')
 const controllerGenero          = require('./controller/genero/controller_genero.js')
-const controllerClassificacao   = require('./controller/classificacao/classificacao.js')
+const controllerClassificacao   = require('./controller/classificacao/controllerClassificacao.js')
 
 
 
@@ -100,6 +100,8 @@ app.delete('/v1/senai/locadora/filme/:id', async function (request, response){
     response.json(result)
 })
 
+
+
 // ENDPOINTS SOBRE O GÊNERO
 
 // endpoint para o CRUD do gênero
@@ -163,6 +165,8 @@ app.delete('/v1/senai/locadora/genero/:id', async function(request, response) {
     response.json(result)
 })
 
+
+
 // ENDPOINTS SOBRE A CLASSIFICAÇÃO
 
 // endpoint para CRUD da classificação
@@ -180,7 +184,7 @@ app.post('/v1/senai/locadora/classificacao',bodyParserJSON, async function(reque
      response.json(result)
  })
 
-// endpoint para listar os gêneros
+// endpoint para listar os classificação
 app.get('/v1/senai/locadora/classificacao', async function(request, response) {
     let result = await controllerClassificacao.listarClassificacao()
 
@@ -188,7 +192,7 @@ app.get('/v1/senai/locadora/classificacao', async function(request, response) {
     response.json(result)
 })
 
-// endpoint para listar os gêneros
+// endpoint para listar por ID a classificação
 app.get('/v1/senai/locadora/classificacao/:id', async function(request, response) {
     let id = request.params.id
     let result = await controllerClassificacao.buscarClassificacao(id)
@@ -197,7 +201,7 @@ app.get('/v1/senai/locadora/classificacao/:id', async function(request, response
     response.json(result)
 })
 
-// endpoint para atualizar um filme
+// endpoint para atualizar um classificação
 app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
@@ -211,7 +215,16 @@ app.put('/v1/senai/locadora/classificacao/:id', bodyParserJSON, async function(r
     
     // Chama a função para atualizar o filme.
     let result = await controllerClassificacao.atualizarClassificacao(dados, id, contentType)
+    console.log(result.status_code)
+    response.status(result.status_code)
+    response.json(result)
+})
 
+// endpoint para deletar a classificação pelo id
+app.delete('/v1/senai/locadora/classificacao/:id', async function(request, response) {
+    let id = request.params.id
+
+    let result = await controllerClassificacao.excluirClassificacao(id)
     response.status(result.status_code)
     response.json(result)
 })

@@ -44,10 +44,56 @@ const inserirNovaClassificacao = async function (classificacao, contentType) {
 
 }
 
-const atualizarClassificacao = async function (classificacao) {
-    let sql = `update tbl_classificacao set
-                    classificacao = '${classificacao.classificacao}'`
+const atualizarClassificacao = async function (classificacao, id, contentType) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
+    try {
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+            let resultBuscarClassificacao = await buscarClassificacao(id)
+
+            if(resultBuscarClassificacao.status){
+
+                if(resultBuscarClassificacao){
+                    let validar = await validarDados(classificacao)
+                    
+                    if(!validar){
+
+                        classificacao.id = Number(id)
+                        let result = await classificacaoDAO.updateClassificacao(await tratarDados(classificacao))
+                        if(result){
+                            
+                            customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
+                            customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
+                            customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_UPDATED_ITEM.message
+                            customMessage.DEFAULT_MESSAGE.response      = classificacao
+                            return customMessage.DEFAULT_MESSAGE
+                
+
+                        }else{
+                            return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
+                        }
+
+                    }else{
+                        return validar
+                    }
+
+                }else{
+                    return customMessage.ERROR_BAD_REQUEST // RETORNA UM 400
+                }
+
+            }else{  
+                return resultBuscarClassificacao // RETORNA UM 400 ou 404
+            }
+
+        }else{
+            return customMessage.ERROR_CONTENT_TYPE // RETORNA UM 415
+        }
+
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (CONTROLLER)
+    }
 }
+
 
 const listarClassificacao = async function () {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
@@ -58,7 +104,8 @@ const listarClassificacao = async function () {
 
         if(result){
             if(result.length > 0){
-                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                customMessage.DEFAULT_MESS
+                                customMessage.DEFAULT_MESS = customMessage.SUCCESS_RESPONSE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                 customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_RESPONSE.message
                 customMessage.DEFAULT_MESSAGE.response = result
@@ -108,13 +155,36 @@ const buscarClassificacao = async function (id) {
 }
 
 const excluirClassificacao = async function (id) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
 
+    try {
+        let resultBuscarClassificacao = await buscarClassificacao(id)
+        if(resultBuscarClassificacao.status){
+
+            let result = await classificacaoDAO.deleteClassificacao(id)
+            if(result){
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_DELETED_ITEM.status_code
+                customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_DELETED_ITEM.message
+
+                return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
+            }else{
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
+            }
+
+        }else{
+            return resultBuscarClassificacao // RETORNA UM 400 ou 404
+        }
+        
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (CONTROLLER)
+    }
 }
 
 //Funções para validar
 const validarDados = async function (classificacao) {
     if(classificacao.classificacao == undefined || classificacao.classificacao == '' || classificacao.classificacao == null || classificacao.classificacao.length > 8){
-        customMessage.ERROR_BAD_REQUEST.field = '[CLASSIFICACAO] INVÁLIDO'
+        customMessage.ERROR_BAD_REQUEST.field = '[CLASSIFICAÇÃO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     }else{
         return false
