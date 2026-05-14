@@ -155,10 +155,21 @@ update tbl_profissional set
     biografia 		= 'Olá, me chamo Matheus e estou desenvolvendo este projeto!!'
 		where id = 1;
         
-select * from tbl_profissional order by id desc;
+                     select * from tbl_profissional order by id desc;
 
 select * from tbl_profissional where id = 1;
         
 
 #---------------------------------- DIA 2026-05-13 --------------------------------------#
+
+#---------------------------------- DIA 2026-05-14 --------------------------------------#
+
+create table tbl_nascionalidade(
+	id int not null auto_increment primary key,
+    nascionalidade varchar(30) not null
+);
+
+
+
+#---------------------------------- DIA 2026-05-14 --------------------------------------#
 
