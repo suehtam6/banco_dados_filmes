@@ -16,7 +16,11 @@ const inserirNovoNascionalidade = async function(dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        
+        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+            
+        }else{
+            return customMessage.ERROR_CONTENT_TYPE // RETORNA UM 415
+        }
     } catch (error) {
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (Controller)
     }
