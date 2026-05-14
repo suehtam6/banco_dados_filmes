@@ -249,7 +249,7 @@ app.post('/v1/senai/locadora/profissional',bodyParserJSON, async function(reques
  })
 
 
- // endpoint para listar por ID o Profissonal
+// endpoint para listar por ID o Profissonal
 app.get('/v1/senai/locadora/profissional/:id', async function(request, response) {
     let id = request.params.id
     let result = await controllerProfissional.buscarProfissional(id)
@@ -277,6 +277,7 @@ app.put('/v1/senai/locadora/profissional/:id', bodyParserJSON, async function(re
     response.json(result)
 })
 
+// endpoint para listar os Profissonais
 app.get('/v1/senai/locadora/profissional', async function(request, response) {
 
     let result = await controllerProfissional.listarProfissional()
@@ -285,6 +286,13 @@ app.get('/v1/senai/locadora/profissional', async function(request, response) {
     
 })
 
+app.delete('/v1/senai/locadora/profissional/:id', async function(request, response) {
+    let id = request.params.id
+    let result = await controllerProfissional.excluirProfissional(id)
+    
+    response.status(result.status_code)
+    response.json(result)
+})
 
 
 // Faz um start na API (Aguardando requisição)

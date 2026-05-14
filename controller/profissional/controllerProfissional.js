@@ -159,7 +159,38 @@ const buscarProfissional        = async function (id) {
      }
 }
 
-const excluirProfissional       = async function (id) {}
+const excluirProfissional       = async function (id) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
+    try {
+        let resultBuscarProfissional = await buscarProfissional(id)
+
+        // Verificando se o retorna é verdadeiro(true)
+        if(resultBuscarProfissional.status){
+            let result = await profissionalDAO.deleteProfissional(id)
+            
+            if(result){
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_DELETED_ITEM.status_code
+                customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_DELETED_ITEM.message
+                
+                return customMessage.DEFAULT_MESSAGE // RETORNA UM 200 PARA ENVIAR UMA MENSAGEM DE OK!!
+            }else{
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
+            }
+
+
+        }else{
+            return resultBuscarProfissional // Retorna um 404
+        }
+
+
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (CONTROLLER)
+    }
+
+
+}
 
 
 // Função para validar dados.

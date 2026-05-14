@@ -68,8 +68,8 @@ const selectAllProfissional = async function() {
 
         let result = await knexConection.raw(sql)
 
-        if(result){
-            return true
+        if(Array.isArray(result)){
+            return result[0] // Retornando o índice da lista dos profissionais
         }else{
             return false
         }
