@@ -145,7 +145,7 @@ const listarFilme = async function () {
                 customMessage.DEFAULT_MESSAGE.response.count = result.length
                 customMessage.DEFAULT_MESSAGE.response.filme = result
 
-                return customMessage.DEFAULT_MESSAGE
+                return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
             } else {
                 return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
             }// fecha  if sobre o conteúdo.

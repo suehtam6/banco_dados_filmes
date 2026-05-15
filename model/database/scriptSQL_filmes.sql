@@ -155,7 +155,7 @@ update tbl_profissional set
     biografia 		= 'Olá, me chamo Matheus e estou desenvolvendo este projeto!!'
 		where id = 1;
         
-                     select * from tbl_profissional order by id desc;
+select * from tbl_profissional order by id desc;
 
 select * from tbl_profissional where id = 1;
         
@@ -169,7 +169,22 @@ create table tbl_nascionalidade(
     nascionalidade varchar(30) not null
 );
 
+insert into tbl_nascionalidade(
+	nascionalidade
+)values(
+	'Americano'
+);
 
+update tbl_profissional set
+	nascionalidade = 'AAAAAAAAA'
+		where id = 2;
+        
+
+select * from tbl_nascionalidade order by id desc;
+
+select * from tbl_nascionalidade where id = 1;
+
+#delete from tbl_nascionalidade where id=1;
 
 #---------------------------------- DIA 2026-05-14 --------------------------------------#
 

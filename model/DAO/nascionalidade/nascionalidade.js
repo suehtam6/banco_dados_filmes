@@ -20,7 +20,7 @@ const insertNascionalidade = async function(nascionalidade) {
         let sql = `insert into tbl_nascionalidade(
                         nascionalidade
                     )values(
-                        'Americano'
+                        '${nascionalidade.nascionalidade}'
                     );`
     let result = await knexConection.raw(sql)
 
@@ -36,19 +36,70 @@ const insertNascionalidade = async function(nascionalidade) {
 }
 
 const updateNascionalidade = async function(nascionalidade) {
-    
+    try {
+        let sql = `update tbl_nascionalidade set
+                        nascionalidade = '${nascionalidade.nascionalidade}'
+                            where id = ${nascionalidade.id};`
+        
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return true
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 const selectAllNascionalidade = async function() {
-    
+    try {
+        let sql = `select * from tbl_nascionalidade order by id desc;`
+
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return result[0]
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 const selectByIdNascionalidade = async function(id) {
-    
+    try {
+        let sql = `select * from tbl_nascionalidade where id = ${id}`
+
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return result[0]
+        }else{
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
 }
 
 const deleteNascionalidade = async function(id){
-    
+    try {
+        let sql = `delete from tbl_nascionalidade where id=${id};`
+
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return true
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 module.exports = {
