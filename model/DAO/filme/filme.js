@@ -94,11 +94,11 @@ const selectAllFilme = async function () {
         // Executa no BD o script e guarda o retorno do BD,
         // Pode ser um ERRO(false) ou um ARRAY com os dados.
         let result = await knexConection.raw(sql)
-
+        
         // Verificando se o que está retornando é um ARRAY ou não.
         if (Array.isArray(result)) {
             return result[0] // Retorna somente o índice com a lista de filmes.
-
+            
         } else {
             return false
         }
@@ -107,6 +107,8 @@ const selectAllFilme = async function () {
         return false
     }
 }
+
+
 
 // Função para selecionar um filme através do ID do filme
 const selectByIdFilme = async function (id) {

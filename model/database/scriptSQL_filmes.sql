@@ -175,7 +175,7 @@ insert into tbl_nascionalidade(
 	'Americano'
 );
 
-update tbl_profissional set
+update tbl_nascionalidade set
 	nascionalidade = 'AAAAAAAAA'
 		where id = 2;
         
@@ -188,3 +188,53 @@ select * from tbl_nascionalidade where id = 1;
 
 #---------------------------------- DIA 2026-05-14 --------------------------------------#
 
+#---------------------------------- DIA 2026-05-15 --------------------------------------#
+
+
+#CRIANDO TABELA SOBRE OS CARGOS DOS ATORES
+create table tbl_cargo(
+	id int not null auto_increment primary key,
+    cargo varchar(25) not null
+);
+
+insert into tbl_cargo(
+	cargo
+)values(
+	"Ator"
+);
+
+update tbl_cargo set
+	cargo = "Atriz"
+    where id = 1;
+    
+select * from tbl_cargo order by id desc;
+
+select * from tbl_cargo where id = 3;
+delete from tbl_cargo where id = 1;
+
+
+
+#CRIANDO TABELA SOBRE O PAPEL DOS ATORES
+create table tbl_papel(
+	id int not null auto_increment primary key,
+	papel varchar(20)
+);
+
+insert into tbl_papel(
+	papel
+)values(
+	'Ash'
+);
+
+update tbl_papel set
+	papel = 'Gary'
+		where id = 1;
+        
+select * from tbl_papel order by id desc;
+
+select * from tbl_papel where id = 1;
+
+delete from tbl_papel where id = 1;
+
+
+#---------------------------------- DIA 2026-05-15 --------------------------------------#
