@@ -114,3 +114,12 @@ const deletePapel = async function(id) {
         return false
     }
 }
+
+
+module.exports = {
+    insertPapel,
+    updatePapel,
+    selectAllPapel,
+    selectByIdPapel,
+    deletePapel
+}

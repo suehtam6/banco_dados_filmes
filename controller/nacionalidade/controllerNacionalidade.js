@@ -9,10 +9,10 @@
 const configMessages = require('../modulo/configMessages.js')
 
 // Import do arquivo para verificar se o script rodou dentro do banco.
-const nascionalidadeDAO = require('../../model/DAO/nascionalidade/nascionalidade.js')
+const nascionalidadeDAO = require('../../model/DAO/nacionalidade/nacionalidade.js')
 
 
-const inserirNovoNascionalidade = async function (dados, contentType) {
+const inserirNovoNacionalidade = async function (dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -50,7 +50,7 @@ const inserirNovoNascionalidade = async function (dados, contentType) {
     }
 }
 
-const atualizarNascionalidade = async function (dados, id, contentType) {
+const atualizarNacionalidade = async function (dados, id, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -104,7 +104,7 @@ const atualizarNascionalidade = async function (dados, id, contentType) {
     }
 }
 
-const listarNascionalidade = async function () {
+const listarNacionalidade = async function () {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -130,7 +130,7 @@ const listarNascionalidade = async function () {
     }
 }
 
-const buscarNascionalidade = async function (id) {
+const buscarNacionalidade = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -168,7 +168,7 @@ const buscarNascionalidade = async function (id) {
 
 }
 
-const excluirNascionalidade = async function (id) {
+const excluirNacionalidade = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -221,9 +221,9 @@ const tratarDados = async function (dados) {
 
 
 module.exports = {
-    inserirNovoNascionalidade,
-    atualizarNascionalidade,
-    listarNascionalidade,
-    buscarNascionalidade,
-    excluirNascionalidade
+    inserirNovoNacionalidade,
+    atualizarNacionalidade,
+    listarNacionalidade,
+    buscarNacionalidade,
+    excluirNacionalidade
 }

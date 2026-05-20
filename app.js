@@ -15,7 +15,7 @@ const controllerFilme           = require('./controller/filme/controller_filme.j
 const controllerGenero          = require('./controller/genero/controller_genero.js')
 const controllerClassificacao   = require('./controller/classificacao/controllerClassificacao.js')
 const controllerProfissional    = require('./controller/profissional/controllerProfissional.js')
-const controllerNascionalidade  = require('./controller/nascionalidade/controllerNascionalidade.js')
+const controllerNacionalidade  = require('./controller/nacionalidade/controllerNacionalidade.js')
 const controllerCargo           = require('./controller/cargo/controllerCargo.js')
 
 
@@ -301,14 +301,14 @@ app.delete('/v1/senai/locadora/profissional/:id', async function(request, respon
 // ENDPOINTS SOBRE A NASCIONALIDADE  
 
 // endpoint para inserir a nascionalidade
-app.post('/v1/senai/locadora/nascionalidade', bodyParserJSON, async function(request, response) {
+app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(request, response) {
    
     //Guardando os dados do body para utilizar no CRUD
     let dados = request.body
 
     let contentType = request.headers['content-type']
 
-    let result = await controllerNascionalidade.inserirNovoNascionalidade(dados, contentType)
+    let result = await controllerNacionalidade.inserirNovoNacionalidade(dados, contentType)
 
     response.status(result.status_code)
     response.json(result)
@@ -319,7 +319,7 @@ app.post('/v1/senai/locadora/nascionalidade', bodyParserJSON, async function(req
 app.get('/v1/senai/locadora/nascionalidade/:id', async function(request, response) {
     let id = request.params.id
 
-    let result = await controllerNascionalidade.buscarNascionalidade(id)
+    let result = await controllerNacionalidade.buscarNacionalidade(id)
 
     response.status(result.status_code)
     response.json(result)
@@ -327,7 +327,7 @@ app.get('/v1/senai/locadora/nascionalidade/:id', async function(request, respons
 })
 
 // endpoint para atualizar uma nascionalidade
-app.put('/v1/senai/locadora/nascionalidade/:id', bodyParserJSON, async function(request, response) {
+app.put('/v1/senai/locadora/nacionalidade/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
     let id = request.params.id
@@ -339,25 +339,25 @@ app.put('/v1/senai/locadora/nascionalidade/:id', bodyParserJSON, async function(
     let contentType = request.headers['content-type']
     
     // Chama a função para atualizar o filme.
-    let result = await controllerNascionalidade.atualizarNascionalidade(dados, id, contentType)
+    let result = await controllerNacionalidade.atualizarNacionalidade(dados, id, contentType)
     
     response.status(result.status_code)
     response.json(result)
 })
 
 // endpoint para listar as nascionalidades
-app.get('/v1/senai/locadora/nascionalidade', async function(request, response) {
+app.get('/v1/senai/locadora/nacionalidade', async function(request, response) {
 
-    let result = await controllerNascionalidade.listarNascionalidade()
+    let result = await controllerNacionalidade.listarNacionalidade()
     response.status(result.status_code)
     response.json(result)
     
 })
 
-// endpoint para deletar algum profissional
-app.delete('/v1/senai/locadora/nascionalidade/:id', async function(request, response) {
+// endpoint para deletar alguma nacionalidade
+app.delete('/v1/senai/locadora/nacionalidade/:id', async function(request, response) {
     let id = request.params.id
-    let result = await controllerNascionalidade.excluirNascionalidade(id)
+    let result = await controllerNacionalidade.excluirNacionalidade(id)
     
     response.status(result.status_code)
     response.json(result)
