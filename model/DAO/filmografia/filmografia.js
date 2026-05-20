@@ -1,6 +1,6 @@
 /**************************************************************************************************************************
- * Objetivo: Arquivo responsável pelo CRUD de dados dos papeis dos profissionais no banco de dados mySQL
- * Data: 2026/05/15
+ * Objetivo: Arquivo responsável pelo CRUD de dados sobre a filmografia no banco de dados mySQL
+ * Data: 2026/05/20
  * Autor: Matheus Lucas
  * Versão: 1.0
  **************************************************************************************************************************/
@@ -15,14 +15,17 @@ const knexDataBaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexDataBaseConfig.development)
 
 
-const insertPapel = async function(dados) {
+
+const insertFilmografia = async function(dados) {
     try {
         
-        let sql = `insert into tbl_papel(
-                            papel
-                        )values(
-                            '${dados.papel}'
-                        );`
+        let sql = `insert into tbl_filmografia(
+                        filmografia,
+                        capa
+                    )values(
+                        "${dados.filmografia}",
+                        "${dados.capa}"
+                    );`
         let result = await knexConection.raw(sql)
 
         if(result){
@@ -36,11 +39,12 @@ const insertPapel = async function(dados) {
     }
 }
 
-const updatePapel = async function(dados) {
+const updateFilmografia = async function(dados) {
  
     try {
-        let sql = `update tbl_papel set
-                        papel = '${dados.papel}'
+        let sql = `update tbl_filmografia set
+                        filmografia = '${dados.filmografia}',
+                        capa = '${dados.capa}'
                         where id = ${dados.id};`
 
         let result = await knexConection.raw(sql)
@@ -57,9 +61,9 @@ const updatePapel = async function(dados) {
 
 }
 
-const selectAllPapel = async function() {
+const selectAllFilmografia = async function() {
     try {
-        let sql = `select * from tbl_papel order by id desc;`
+        let sql = `select * from tbl_filmografia order by id desc;`
 
         let result = await knexConection.raw(sql)
 
@@ -73,12 +77,12 @@ const selectAllPapel = async function() {
     }
 }
 
-const selectByIdPapel = async function(id) {
+const selectByIdFilmografia = async function(id) {
     try {
         
         try {
             
-            let sql = `select * from tbl_papel where id = ${id};`
+            let sql = `select * from tbl_filmografia where id = ${id};`
 
             let result = await knexConection.raw(sql)
 
@@ -97,10 +101,10 @@ const selectByIdPapel = async function(id) {
     }
 }
 
-const deletePapel = async function(id) {
+const deleteFilmografia = async function(id) {
     try {
         
-        let sql = `delete from tbl_papel where id = ${id};`
+        let sql = `delete from tbl_filmografia where id = ${id};`
 
         let result = await knexConection.raw(sql)
 
@@ -117,9 +121,9 @@ const deletePapel = async function(id) {
 
 
 module.exports = {
-    insertPapel,
-    updatePapel,
-    selectAllPapel,
-    selectByIdPapel,
-    deletePapel
+    insertFilmografia,
+    updateFilmografia,
+    selectAllFilmografia,
+    selectByIdFilmografia,
+    deleteFilmografia
 }

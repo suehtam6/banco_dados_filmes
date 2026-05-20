@@ -238,3 +238,35 @@ delete from tbl_papel where id = 1;
 
 
 #---------------------------------- DIA 2026-05-15 --------------------------------------#
+
+
+
+#---------------------------------- DIA 2026-05-20 --------------------------------------#
+
+#Hoje irémos mexer com as tabela intermediárias.
+
+desc tbl_filme;
+
+#Primeiro devemos apagar todos os dados dentro da tabela filme, 
+# pois eles iriam ficar com a chave estrangeira null e daria erro.
+delete from tbl_filme;
+
+select * from tbl_filme;
+
+#Logo quando você for atualizar o seu código, saiba que você vai ter que apagar sua tabela filme inteira.
+#
+
+
+#Colocando o id da classificação dentro da tabela de filme.
+alter table tbl_filme
+	add column id_classificacao	int not null,
+    add constraint FK_CLASSIFICACAO_FILME
+		foreign key (id_classificacao)
+        references tbl_classificacao(id);
+        
+        
+alter table tbl_classificacao
+	modify column classificacao varchar(30) not null;
+
+#---------------------------------- DIA 2026-05-20 --------------------------------------#
+

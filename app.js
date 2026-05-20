@@ -15,8 +15,10 @@ const controllerFilme           = require('./controller/filme/controller_filme.j
 const controllerGenero          = require('./controller/genero/controller_genero.js')
 const controllerClassificacao   = require('./controller/classificacao/controllerClassificacao.js')
 const controllerProfissional    = require('./controller/profissional/controllerProfissional.js')
-const controllerNacionalidade  = require('./controller/nacionalidade/controllerNacionalidade.js')
+const controllerNacionalidade   = require('./controller/nacionalidade/controllerNacionalidade.js')
 const controllerCargo           = require('./controller/cargo/controllerCargo.js')
+const controllerPapel           = require('./controller/papel/controllerPapel.js')
+const controllerFilmografia     = require('./controller/filmografia/controllerFilmografia.js')
 
 
 
@@ -298,7 +300,9 @@ app.delete('/v1/senai/locadora/profissional/:id', async function(request, respon
 })
 
 
-// ENDPOINTS SOBRE A NASCIONALIDADE  
+
+
+// ENDPOINTS SOBRE A NACIONALIDADE  
 
 // endpoint para inserir a nascionalidade
 app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(request, response) {
@@ -316,7 +320,7 @@ app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(requ
 })
 
 // endpoint para listar por ID a nascionalidade
-app.get('/v1/senai/locadora/nascionalidade/:id', async function(request, response) {
+app.get('/v1/senai/locadora/nacionalidade/:id', async function(request, response) {
     let id = request.params.id
 
     let result = await controllerNacionalidade.buscarNacionalidade(id)
@@ -362,6 +366,8 @@ app.delete('/v1/senai/locadora/nacionalidade/:id', async function(request, respo
     response.status(result.status_code)
     response.json(result)
 })
+
+
 
 
 // ENDPOINTS SOBRE O CARGO
@@ -431,6 +437,125 @@ app.delete('/v1/senai/locadora/cargo/:id', async function(request, response) {
 
 
 
+
+
+// ENDPOINTS SOBRE O PAPEL DO PROSSIFIONAL
+
+//Endpoint para cadastrar um novo papel
+app.post('/v1/senai/locadora/papel', bodyParserJSON, async function(request, response) {
+    
+    let dados = request.body
+
+    let contentType = request.headers["content-type"]
+
+    let result = await controllerPapel.inserirNovoPapel(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//Endpoint para listar os papeis cadastrados
+app.get('/v1/senai/locadora/papel', async function(request, response) {
+    
+    let result = await controllerPapel.listarPapel()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//Endpoint para buscar um papel pelo id
+app.get('/v1/senai/locadora/papel/:id', async function(request, response) {
+    let id = request.params.id
+    
+    let result = await controllerPapel.buscarPapel(id)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//Endpoint para atualizar um papel pelo id
+app.put('/v1/senai/locadora/papel/:id', bodyParserJSON, async function(request, response) {
+    let id = request.params.id
+    let dados = request.body    
+    let contentType = request.headers['content-type']
+
+    let result = await controllerPapel.atualizarPapel(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//Endpoint para deletar um papel pelo id
+app.delete('/v1/senai/locadora/papel/:id', async function(request, response) {
+    
+    let id = request.params.id
+    
+    let result = await controllerPapel.excluirPapel(id)
+    response.status(result.status_code)
+    response.json(result)
+})
+
+
+
+
+// ENDPOINTS SOBRE A FILMOGRAFIA
+//Endpoint para cadastrar uma nova filmografia
+app.post('/v1/senai/locadora/filmografia', bodyParserJSON, async function(request, response) {
+    
+    let dados = request.body
+
+    let contentType = request.headers["content-type"]
+
+    let result = await controllerFilmografia.inserirNovaFilmografia(dados, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//Endpoint para listar as filmografia cadastrados
+app.get('/v1/senai/locadora/filmografia', async function(request, response) {
+    
+    let result = await controllerFilmografia.listarFilmografia()
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//Endpoint para buscar uma filmografia pelo id
+app.get('/v1/senai/locadora/filmografia/:id', async function(request, response) {
+    let id = request.params.id
+    
+    let result = await controllerFilmografia.buscarFilmografia(id)
+
+    response.status(result.status_code)
+    response.json(result)
+
+})
+
+//Endpoint para atualizar uma filmografia pelo id
+app.put('/v1/senai/locadora/filmografia/:id', bodyParserJSON, async function(request, response) {
+    let id = request.params.id
+    let dados = request.body    
+    let contentType = request.headers['content-type']
+
+    let result = await controllerFilmografia.atualizarFilmografia(dados, id, contentType)
+
+    response.status(result.status_code)
+    response.json(result)
+})
+
+//Endpoint para deletar uma filmografia pelo id
+app.delete('/v1/senai/locadora/filmografia/:id', async function(request, response) {
+    
+    let id = request.params.id
+    
+    let result = await controllerFilmografia.excluirFilmografia(id)
+    response.status(result.status_code)
+    response.json(result)
+})
 
 
 // Faz um start na API (Aguardando requisição)

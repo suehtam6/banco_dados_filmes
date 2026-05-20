@@ -9,7 +9,7 @@
 const configMessages = require('../modulo/configMessages.js')
 
 // Import do arquivo para verificar se o script rodou dentro do banco.
-const nascionalidadeDAO = require('../../model/DAO/nacionalidade/nacionalidade.js')
+const nacionalidadeDAO = require('../../model/DAO/nacionalidade/nacionalidade.js')
 
 
 const inserirNovoNacionalidade = async function (dados, contentType) {
@@ -20,7 +20,7 @@ const inserirNovoNacionalidade = async function (dados, contentType) {
 
             let validar = await validarDados(dados)
             if (!validar) {
-                let result = await nascionalidadeDAO.insertNascionalidade(await tratarDados(dados))
+                let result = await nacionalidadeDAO.insertNacionalidade(await tratarDados(dados))
 
                 if (result) {
 
@@ -57,17 +57,17 @@ const atualizarNacionalidade = async function (dados, id, contentType) {
 
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
-            let resultBuscarNascionalidade = await buscarNascionalidade(id)
-            if (resultBuscarNascionalidade.status) {
+            let resultBuscarNacionalidade = await buscarNacionalidade(id)
+            if (resultBuscarNacionalidade.status) {
 
-                if (resultBuscarNascionalidade) {
+                if (resultBuscarNacionalidade) {
 
                     let validar = await validarDados(dados)
 
                     if (!validar) {
 
                         dados.id = Number(id)
-                        let result = await nascionalidadeDAO.updateNascionalidade(dados)
+                        let result = await nacionalidadeDAO.updateNacionalidade(dados)
 
                         if (result) {
 
@@ -92,7 +92,7 @@ const atualizarNacionalidade = async function (dados, id, contentType) {
                 }
 
             } else {
-                return resultBuscarNascionalidade
+                return resultBuscarNacionalidade
             }
 
         } else {
@@ -108,7 +108,7 @@ const listarNacionalidade = async function () {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        let result = await nascionalidadeDAO.selectAllNascionalidade()
+        let result = await nacionalidadeDAO.selectAllNacionalidade()
 
         if (result) {
             if (result.length > 0) {
@@ -139,7 +139,7 @@ const buscarNacionalidade = async function (id) {
             customMessage.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
             return customMessage.ERROR_BAD_REQUEST
         } else {
-            let result = await nascionalidadeDAO.selectByIdNascionalidade(id)
+            let result = await nacionalidadeDAO.selectByIdNacionalidade(id)
 
             if (result) {
 
@@ -172,10 +172,10 @@ const excluirNacionalidade = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        let resultBuscarNascionalidade = await buscarNascionalidade(id)
+        let resultBuscarNacionalidade = await buscarNacionalidade(id)
 
-        if (resultBuscarNascionalidade.status) {
-            let result = await nascionalidadeDAO.deleteNascionalidade(id)
+        if (resultBuscarNacionalidade.status) {
+            let result = await nacionalidadeDAO.deleteNacionalidade(id)
 
             if (result) {
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
@@ -202,8 +202,8 @@ const validarDados = async function (dados) {
     // Ele converte um objeto para string e depois transforma em um outro objeto.
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
-    if (dados.nascionalidade == undefined || dados.nascionalidade == '' || dados.nascionalidade == null || dados.nascionalidade.length > 30) {
-        customMessage.ERROR_BAD_REQUEST.field = '[NASCIONALIDADE] INVÁLIDA'
+    if (dados.nacionalidade == undefined || dados.nacionalidade == '' || dados.nacionalidade == null || dados.nacionalidade.length > 30) {
+        customMessage.ERROR_BAD_REQUEST.field = '[NACIONALIDADE] INVÁLIDA'
         return customMessage.ERROR_BAD_REQUEST
     } else {
         return false
@@ -212,7 +212,7 @@ const validarDados = async function (dados) {
 
 const tratarDados = async function (dados) {
 
-    dados.nascionalidade == dados.nascionalidade.replaceAll("'", "")
+    dados.nacionalidade == dados.nacionalidade.replaceAll("'", "")
 
     return dados
 

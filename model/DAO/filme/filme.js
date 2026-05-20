@@ -18,6 +18,9 @@ const knexConection = knex(knexDataBaseConfig.development)
 // Função para inserir um novo filme no banco de dados
 const insertFilme = async function (filme) {
 
+
+    // ADICIONANDO UM NOVO ATRIBUTO (id_classificacao) para poder cadastrar o filme utilizando o id da classificacao
+    // deve fazer estas pequenas mudanças para atualizar ele.
     try {
         let sql = `insert into tbl_filme(
             nome,
@@ -26,7 +29,8 @@ const insertFilme = async function (filme) {
             data_lancamento,
             duracao,
             valor,
-            avaliacao
+            avaliacao, 
+            id_classificacao
         
         )values(
             '${filme.nome}',
@@ -35,7 +39,8 @@ const insertFilme = async function (filme) {
             '${filme.data_lancamento}',
             '${filme.duracao}',
             '${filme.valor}',
-            if('${filme.avaliacao}' = '', null , '${filme.avaliacao}')
+            if('${filme.avaliacao}' = '', null , '${filme.avaliacao}'),
+            '${filme.id_classificacao}'
         
         );`
 
@@ -62,14 +67,15 @@ const updateFilme = async function (filme) {
     try {
 
         let sql = `update tbl_filme set
-                    nome            = '${filme.nome}',
-                    sinopse         = '${filme.sinopse}',
-                    capa            = '${filme.capa}',
-                    data_lancamento = '${filme.data_lancamento}',
-                    duracao         = '${filme.duracao}',
-                    valor           = '${filme.valor}',
-                    avaliacao       = if('${filme.avaliacao}' = '', null , '${filme.avaliacao}')
-                    where id        = ${filme.id};`
+                    nome                = '${filme.nome}',
+                    sinopse             = '${filme.sinopse}',
+                    capa                = '${filme.capa}',
+                    data_lancamento     = '${filme.data_lancamento}',
+                    duracao             = '${filme.duracao}',
+                    valor               = '${filme.valor}',
+                    avaliacao           = if('${filme.avaliacao}' = '', null , '${filme.avaliacao}'),
+                    id_classificacao    = ${filme.id_classificacao}
+                    where id            = ${filme.id};`
 
         let result = await knexConection.raw(sql)
 

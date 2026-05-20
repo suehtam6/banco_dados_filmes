@@ -15,12 +15,12 @@ const knexDataBaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexDataBaseConfig.development)
 
 
-const insertNacionalidade = async function(nascionalidade) {
+const insertNacionalidade = async function(nacionalidade) {
     try {
-        let sql = `insert into tbl_nascionalidade(
-                        nascionalidade
+        let sql = `insert into tbl_nacionalidade(
+                        nacionalidade
                     )values(
-                        '${nascionalidade.nascionalidade}'
+                        '${nacionalidade.nacionalidade}'
                     );`
     let result = await knexConection.raw(sql)
 
@@ -35,11 +35,11 @@ const insertNacionalidade = async function(nascionalidade) {
     }
 }
 
-const updateNacionalidade = async function(nascionalidade) {
+const updateNacionalidade = async function(nacionalidade) {
     try {
-        let sql = `update tbl_nascionalidade set
-                        nascionalidade = '${nascionalidade.nascionalidade}'
-                            where id = ${nascionalidade.id};`
+        let sql = `update tbl_nacionalidade set
+                        nacionalidade = '${nacionalidade.nacionalidade}'
+                            where id = ${nacionalidade.id};`
         
         let result = await knexConection.raw(sql)
 
@@ -55,7 +55,7 @@ const updateNacionalidade = async function(nascionalidade) {
 
 const selectAllNacionalidade = async function() {
     try {
-        let sql = `select * from tbl_nascionalidade order by id desc;`
+        let sql = `select * from tbl_nacionalidade order by id desc;`
 
         let result = await knexConection.raw(sql)
 
@@ -71,7 +71,7 @@ const selectAllNacionalidade = async function() {
 
 const selectByIdNacionalidade = async function(id) {
     try {
-        let sql = `select * from tbl_nascionalidade where id = ${id}`
+        let sql = `select * from tbl_nacionalidade where id = ${id}`
 
         let result = await knexConection.raw(sql)
 
@@ -88,7 +88,7 @@ const selectByIdNacionalidade = async function(id) {
 
 const deleteNacionalidade = async function(id){
     try {
-        let sql = `delete from tbl_nascionalidade where id=${id};`
+        let sql = `delete from tbl_nacionalidade where id=${id};`
 
         let result = await knexConection.raw(sql)
 

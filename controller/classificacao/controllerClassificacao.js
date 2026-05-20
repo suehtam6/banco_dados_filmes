@@ -18,9 +18,7 @@ const inserirNovaClassificacao = async function (classificacao, contentType) {
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
             let validar = await validarDados(classificacao)
 
-            if(validar){
-                return validar
-            }else{
+            if(!validar){
                 let result = await classificacaoDAO.insertClassificacao(await tratarDados(classificacao))
 
                 if(result){
@@ -33,10 +31,12 @@ const inserirNovaClassificacao = async function (classificacao, contentType) {
                 }else{
                     return customMessage.ERROR_INTERNAL_SERVER_MODEL
                 }
+            }else{
+                return validar
             }
             
         }else{
-            return customMessage.ERROR_CONTENT_TYPE
+            return customMessage.ERROR_CONTENT_TYPE //RETORNA UM 415
         }
     } catch (error) {
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (Controller)
@@ -62,9 +62,9 @@ const atualizarClassificacao = async function (classificacao, id, contentType) {
                         let result = await classificacaoDAO.updateClassificacao(await tratarDados(classificacao))
                         if(result){
                             
-                            customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
-                            customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
-                            customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_UPDATED_ITEM.message
+                            customMessage.DEFAULT_MESSAGE.status        = customMessage.SUCCESS_UPDATED_ITEM.status
+                            customMessage.DEFAULT_MESSAGE.status_code   = customMessage.SUCCESS_UPDATED_ITEM.status_code
+                            customMessage.DEFAULT_MESSAGE.message       = customMessage.SUCCESS_UPDATED_ITEM.message
                             customMessage.DEFAULT_MESSAGE.response      = classificacao
                             return customMessage.DEFAULT_MESSAGE
                 
@@ -104,11 +104,10 @@ const listarClassificacao = async function () {
 
         if(result){
             if(result.length > 0){
-                customMessage.DEFAULT_MESS
-                                customMessage.DEFAULT_MESS = customMessage.SUCCESS_RESPONSE.status = customMessage.SUCCESS_RESPONSE.status
-                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_RESPONSE.message
-                customMessage.DEFAULT_MESSAGE.response.classificacao = result
+                
+                customMessage.DEFAULT_MESSAGE.status                    = customMessage.SUCCESS_RESPONSE.status
+                customMessage.DEFAULT_MESSAGE.status_code               = customMessage.SUCCESS_RESPONSE.status_code
+                customMessage.DEFAULT_MESSAGE.response.classificacao    = result
 
                 return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
             }else{
@@ -183,7 +182,7 @@ const excluirClassificacao = async function (id) {
 
 //Funções para validar
 const validarDados = async function (classificacao) {
-    if(classificacao.classificacao == undefined || classificacao.classificacao == '' || classificacao.classificacao == null || classificacao.classificacao.length > 8){
+    if(classificacao.classificacao == undefined || classificacao.classificacao == '' || classificacao.classificacao == null || classificacao.classificacao.length > 30){
         customMessage.ERROR_BAD_REQUEST.field = '[CLASSIFICAÇÃO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     }else{

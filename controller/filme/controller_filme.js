@@ -11,6 +11,9 @@ const configMessages = require('../modulo/configMessages.js')
 // Import do arquido DAO para manipular os dados de filme no Banco de Dados.
 const filmeDAO = require('../../model/DAO/filme/filme.js')
 
+//Import das controllers
+const controllerClassificacao = require('../classificacao/controllerClassificacao.js')
+
 
 // Função para inserir um novo filme.
 const inserirNovoFilme = async function (filme, contentType) {
@@ -73,7 +76,7 @@ const atualizarFilme = async function (filme, id, contentType) {
             // Se o ID existe no Banco de Dados e se o filme existe.
             let resultBuscarFilme = await buscarFilme(id)
             if (resultBuscarFilme.status) {
-                
+
                 // Validando se JSON está chegando corretamente.
                 if (resultBuscarFilme) {
 
@@ -140,6 +143,28 @@ const listarFilme = async function () {
 
             // Validação para verificar se o conteúdo do ARRAY tem dados de retorno ou se está vazio
             if (result.length > 0) {
+
+                //Manipulação dos dados da Classificação, por que eu preciso que o usuário vejo a classificação que deseja e não o id, pois ele não deve saber qual é o id.
+                for (filme of result) {
+                    //Buscando a classificacao que tem em cada filme.
+                    //Busca na controller da classificacao o ID referente a FK da classificacao. (Explicação do professor)
+                    let resultClassificacao = await controllerClassificacao.buscarClassificacao(filme.id_classificacao)
+
+                    if (resultClassificacao.status) {
+                        //Entrando dentro da área que contém a classificação com o id e o nome dela. (Minha explicação)
+                        //Adicionar um atributo classificação no JSON do filme e colocar o resultado com os dados da classificação. (Explicação do professor)
+                        filme.classificacao = resultClassificacao.response.classificacao
+
+                        //Não é necessario deixar dois IDs no projeto, pois sem ele iria ter o id_classificacao e também o "classificacao" aonde iria conter o id também. (Minha explicação)
+                        //Apaga o id_classificacao do JSON de filme. (Explicação do professor)
+                        delete filme.id_classificacao
+                    } else {
+                        return resultClassificacao // RETORNA UM 404
+                    }
+
+                }
+
+
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code // RETORNA UM 200
                 customMessage.DEFAULT_MESSAGE.response.count = result.length
@@ -181,6 +206,28 @@ const buscarFilme = async function (id) {
 
                 // Validação para saber se o result tem o item pedido cadastrado.
                 if (result.length > 0) {
+
+
+                    //Manipulação dos dados da Classificação, por que eu preciso que o usuário vejo a classificação que deseja e não o id, pois ele não deve saber qual é o id.
+                    for (filme of result) {
+                        //Buscando a classificacao que tem em cada filme.
+                        //Busca na controller da classificacao o ID referente a FK da classificacao. (Explicação do professor)
+                        let resultClassificacao = await controllerClassificacao.buscarClassificacao(filme.id_classificacao)
+
+                        if (resultClassificacao.status) {
+                            //Entrando dentro da área que contém a classificação com o id e o nome dela. (Minha explicação)
+                            //Adicionar um atributo classificação no JSON do filme e colocar o resultado com os dados da classificação. (Explicação do professor)
+                            filme.classificacao = resultClassificacao.response.classificacao
+
+                            //Não é necessario deixar dois IDs no projeto, pois sem ele iria ter o id_classificacao e também o "classificacao" aonde iria conter o id também. (Minha explicação)
+                            //Apaga o id_classificacao do JSON de filme. (Explicação do professor)
+                            delete filme.id_classificacao
+                        } else {
+                            return resultClassificacao // RETORNA UM 404
+                        }
+
+                    }
+
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.response.filme = result
@@ -210,20 +257,20 @@ const excluirFilme = async function (id) {
         // Verificando se existe esse ID no buscarFilme
         let resultBuscarFilme = await buscarFilme(id)
         if (resultBuscarFilme.status) {
-                let result = await filmeDAO.deleteFilme(id)
-                
-                if (result) {
-                    
-                    customMessage.DEFAULT_MESSAGE.status        = customMessage.SUCCESS_DELETED_ITEM.status
-                    customMessage.DEFAULT_MESSAGE.status_code   = customMessage.SUCCESS_DELETED_ITEM.status_code
-                    customMessage.DEFAULT_MESSAGE.message       = customMessage.SUCCESS_DELETED_ITEM.message
-                    
-                    return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
+            let result = await filmeDAO.deleteFilme(id)
 
-                } else {
-                    
-                    return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500(MODEL)
-                }
+            if (result) {
+
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_DELETED_ITEM.status_code
+                customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_DELETED_ITEM.message
+
+                return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
+
+            } else {
+
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500(MODEL)
+            }
 
 
         } else {
@@ -266,23 +313,32 @@ const validarDados = async function (filme) {
     } else if (filme.avaliacao == undefined || isNaN(filme.avaliacao) || filme.avaliacao.length > 3 || filme.avaliacao > 5) {
         customMessage.ERROR_BAD_REQUEST.field = '[AVALIAÇÃO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
+
+
+        //Validação para a FK(foreign key//chave estrangeira) da classificação, pois ela não pode chegar vazia
+    } else if (filme.id_classificacao == undefined || String(filme.id_classificacao).replaceAll(' ', '') == '' || filme.id_classificacao == null || isNaN(filme.id_classificacao) || filme.id_classificacao <= 0) {
+        customMessage.ERROR_BAD_REQUEST.field = '[ID CLASSIFICAÇÃO] INVÁLIDO'
+        return customMessage.ERROR_BAD_REQUEST
+
+
     } else {
-        
+
 
         return false
     }
 
 }
 
-const tratarDados = async function(filme) {
+const tratarDados = async function (filme) {
     //tratamento para evitar a chegada das aspas(') como caracter inválido
-    filme.nome              = filme.nome.replaceAll("'", "")
-    filme.sinopse           = filme.sinopse.replaceAll("'", "")
-    filme.capa              = filme.capa.replaceAll("'", "")
-    filme.data_lancamento   = filme.data_lancamento.replaceAll("'", "")
-    filme.duracao           = filme.duracao.replaceAll("'", "")
-    filme.valor             = filme.valor.replaceAll("'", "")
-    filme.avaliacao         = filme.avaliacao.replaceAll("'", "")
+    filme.nome = filme.nome.replaceAll("'", "")
+    filme.sinopse = filme.sinopse.replaceAll("'", "")
+    filme.capa = filme.capa.replaceAll("'", "")
+    filme.data_lancamento = filme.data_lancamento.replaceAll("'", "")
+    filme.duracao = filme.duracao.replaceAll("'", "")
+    filme.valor = filme.valor.replaceAll("'", "")
+    filme.avaliacao = filme.avaliacao.replaceAll("'", "")
+
 
     return filme
 }

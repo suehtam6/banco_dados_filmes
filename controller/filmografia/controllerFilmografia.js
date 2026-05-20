@@ -1,6 +1,6 @@
 /************************************************************************************************************************
- * Objetivo: Arquivo responsável pela validação, tratamento, manipulação de dados para realizar o CRUD da nascionalidade
- * Data: 2026-05-14
+ * Objetivo: Arquivo responsável pela validação, tratamento, manipulação de dados para realizar o CRUD da filmografia
+ * Data: 2026-05-20
  * Autor: Matheus Lucas
  * Versão: 1.0
  *************************************************************************************************************************/
@@ -8,11 +8,11 @@
 // Import do arquivo de configurações de mensagens do projeto.
 const configMessages = require('../modulo/configMessages.js')
 
-// Import do arquivo para verificar se o script rodou dentro do banco.
-const papelDAO = require('../../model/DAO/papel/papel.js')
+//Import da DAO
+const filmografiaDAO = require('../../model/DAO/filmografia/filmografia.js')
 
 
-const inserirNovoPapel = async function (dados, contentType) {
+const inserirNovaFilmografia = async function (dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -23,7 +23,7 @@ const inserirNovoPapel = async function (dados, contentType) {
 
             if (!validar) {
 
-                let result = await papelDAO.insertPapel(await tratarDados(dados))
+                let result = await filmografiaDAO.insertFilmografia(await tratarDados(dados))
 
                 if (result) {
 
@@ -53,22 +53,22 @@ const inserirNovoPapel = async function (dados, contentType) {
 
 }
 
-const atualizarPapel = async function (dados, id, contentType) {
+const atualizarFilmografia = async function (dados, id, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
 
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
 
-            let resultBuscarPapel = await buscarPapel(id)
+            let resultBuscarFilmografia = await buscarFilmografia(id)
 
-            if (resultBuscarPapel.status) {
+            if (resultBuscarFilmografia.status) {
 
                 let validar = await validarDados(dados)
 
                 if (!validar) {
                     dados.id = Number(id)
-                    let result = await papelDAO.updatePapel(dados)
+                    let result = await filmografiaDAO.updateFilmografia(await tratarDados(dados))
 
                     if (result) {
                         customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
@@ -101,12 +101,12 @@ const atualizarPapel = async function (dados, id, contentType) {
 
 }
 
-const listarPapel = async function () {
+const listarFilmografia = async function () {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
 
-        let result = await papelDAO.selectAllPapel()
+        let result = await filmografiaDAO.selectAllFilmografia()
 
         if (result) {
 
@@ -114,7 +114,7 @@ const listarPapel = async function () {
 
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                customMessage.DEFAULT_MESSAGE.response.papel = result
+                customMessage.DEFAULT_MESSAGE.response.filmografia = result
 
                 return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
 
@@ -132,7 +132,7 @@ const listarPapel = async function () {
 
 }
 
-const buscarPapel = async function (id) {
+const buscarFilmografia = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -141,7 +141,7 @@ const buscarPapel = async function (id) {
             return customMessage.DEFAULT_MESSAGE
         } else {
 
-            let result = await papelDAO.selectByIdPapel(id)
+            let result = await filmografiaDAO.selectByIdFilmografia(id)
 
             if (result) {
 
@@ -149,7 +149,7 @@ const buscarPapel = async function (id) {
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                    customMessage.DEFAULT_MESSAGE.response.papel = result
+                    customMessage.DEFAULT_MESSAGE.response.filmografia = result
 
                     return customMessage.DEFAULT_MESSAGE //RETONA UM 200
                 } else {
@@ -170,16 +170,16 @@ const buscarPapel = async function (id) {
 
 }
 
-const excluirPapel = async function (id) {
+const excluirFilmografia = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
 
-        let resultBuscarPapel = await buscarPapel(id)
+        let resultBuscarFilmografia = await buscarFilmografia(id)
 
-        if (resultBuscarPapel.status) {
+        if (resultBuscarFilmografia.status) {
 
-            let result = await papelDAO.deletePapel(id)
+            let result = await filmografiaDAO.deleteFilmografia(id)
 
             if (result) {
 
@@ -210,28 +210,31 @@ const validarDados = async function (dados) {
     // Ele converte um objeto para string e depois transforma em um outro objeto.
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
-    if (dados.papel == undefined || dados.papel == '' || dados.papel == null || dados.papel.length > 30) {
+    if (dados.filmografia == undefined || dados.filmografia == '' || dados.filmografia == null || dados.filmografia.length > 80) {
         customMessage.ERROR_BAD_REQUEST.field = '[PAPEL] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
-    } else {
+    } else if(dados.capa == undefined || dados.capa == '' || dados.capa == null || dados.capa.length > 255) {
+        customMessage.ERROR_BAD_REQUEST.field = '[PAPEL] INVÁLIDO'
+        return customMessage.ERROR_BAD_REQUEST
+    }else{
         return false
     }
 }
 
 const tratarDados = async function (dados) {
 
-    dados.papel == dados.papel.replaceAll("'", "")
+    dados.filmografia == dados.filmografia.replaceAll("'", "")
+    dados.capa == dados.capa.replaceAll("'", "")
 
     return dados
 
 }
 
 
-
 module.exports = {
-    inserirNovoPapel,
-    atualizarPapel,
-    listarPapel,
-    buscarPapel,
-    excluirPapel
+    inserirNovaFilmografia,
+    listarFilmografia,
+    buscarFilmografia,
+    atualizarFilmografia,
+    excluirFilmografia
 }
