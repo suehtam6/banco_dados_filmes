@@ -164,27 +164,31 @@ select * from tbl_profissional where id = 1;
 
 #---------------------------------- DIA 2026-05-14 --------------------------------------#
 
-create table tbl_nascionalidade(
+create table tbl_nacionalidade(
 	id int not null auto_increment primary key,
-    nascionalidade varchar(30) not null
+    nacionalidade varchar(30) not null
 );
 
-insert into tbl_nascionalidade(
-	nascionalidade
+insert into tbl_nacionalidade(
+	nacionalidade
 )values(
 	'Americano'
 );
 
-update tbl_nascionalidade set
-	nascionalidade = 'AAAAAAAAA'
+update tbl_nacionalidade set
+	nacionalidade = 'AAAAAAAAA'
 		where id = 2;
         
 
-select * from tbl_nascionalidade order by id desc;
+select * from tbl_nacionalidade order by id desc;
 
-select * from tbl_nascionalidade where id = 1;
+select * from tbl_nacionalidade where id = 1;
 
-#delete from tbl_nascionalidade where id=1;
+#delete from tbl_nacionalidade where id=1;
+
+desc tbl_nacionalidade;
+
+drop table tbl_nacionalidade;
 
 #---------------------------------- DIA 2026-05-14 --------------------------------------#
 
@@ -254,8 +258,6 @@ delete from tbl_filme;
 select * from tbl_filme;
 
 #Logo quando você for atualizar o seu código, saiba que você vai ter que apagar sua tabela filme inteira.
-#
-
 
 #Colocando o id da classificação dentro da tabela de filme.
 alter table tbl_filme
@@ -267,6 +269,72 @@ alter table tbl_filme
         
 alter table tbl_classificacao
 	modify column classificacao varchar(30) not null;
+    
+    
+    
+    
+create table tbl_filmografia(
+	id int not null auto_increment primary key,
+    filmografia varchar(80) not null,
+    capa varchar(255) not null
+);
+
+insert into tbl_filmografia(
+	filmografia,
+    capa
+)values(
+	"pokemon as aventuras em galar",
+    "pokemon.png"
+);
+
+update tbl_filmografia set
+	filmografia = "pokemon as aventuras em Alola",
+    capa = "pokemon.jpg"
+	where id = 1;
+    
+select * from tbl_filmografia order by id desc;
+
+select * from tbl_filmografia where id = 1;
 
 #---------------------------------- DIA 2026-05-20 --------------------------------------#
+
+#---------------------------------- DIA 2026-05-22 --------------------------------------#
+
+create table tbl_filme_genero(
+	id int not null auto_increment primary key,
+    id_filme int not null,
+    id_genero int not null,
+    
+    constraint FK_FILME_FILMEGENERO
+    foreign key (id_filme)
+    references tbl_filme(id),
+    
+    constraint FK_GENERO_FILMEGENERO
+    foreign key (id_genero)
+    references tbl_genero(id)
+    
+);
+
+insert into tbl_filme_genero(
+	id_filme,
+    id_genero
+)values(
+	87,
+    1
+);
+
+update tbl_filme_genero set
+	id_filme = 85,
+    id_genero = 2
+    where id = 1;
+    
+select * from tbl_filme_genero order by id desc;
+select * from tbl_filme_genero order by id =1;
+
+delete from tbl_filme_genero where id = 1;
+
+#drop table tbl_filme_genero;
+
+
+#---------------------------------- DIA 2026-05-22 --------------------------------------#
 

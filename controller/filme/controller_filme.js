@@ -13,6 +13,7 @@ const filmeDAO = require('../../model/DAO/filme/filme.js')
 
 //Import das controllers
 const controllerClassificacao = require('../classificacao/controllerClassificacao.js')
+const controllerFilmeGenero   = require('./controller_filme_genero.js')
 
 
 // Função para inserir um novo filme.
@@ -33,6 +34,9 @@ const inserirNovoFilme = async function (filme, contentType) {
                 return validar // RETORNA UM 400
             } else {
 
+                
+
+
                 let tratarFilme = await tratarDados(await tratarDados(filme))
                 // Encaminha os dados fo Filme para o DAO inserir no banco de dados.
                 let result = await filmeDAO.insertFilme(tratarFilme)
@@ -40,6 +44,23 @@ const inserirNovoFilme = async function (filme, contentType) {
 
                     // Cria o ID do JSON do filme e adiciona o ID gerado no DAO
                     filme.id = result
+
+
+                    // Manipulação de dados para inserir os gêneros relacionados ao filme.
+                    //Percorre o ARRAY de gêneros que chegará na requisição pelo objeto Filme
+                    for(itemFilme of filme.genero){
+
+                    
+                        let filmeGenero = {
+                            "id_filme"  : filme.id,
+                            "id_genero" : itemFilme.id
+                        }
+
+
+                        let resultFilmeGenero = await controllerFilmeGenero.inserirNovoFilmeGenero(filmeGenero)
+                        console.log(resultFilmeGenero)
+                    }
+
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATE_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATE_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATE_ITEM.message
@@ -62,7 +83,6 @@ const inserirNovoFilme = async function (filme, contentType) {
 
 
 }
-
 
 // Função para atualizar um filme existente.
 const atualizarFilme = async function (filme, id, contentType) {
@@ -282,8 +302,6 @@ const excluirFilme = async function (id) {
     }
 
 }
-
-
 
 // Função para validar dados.
 const validarDados = async function (filme) {

@@ -12,6 +12,7 @@ const bodyParser    = require('body-parser')
 
 // Import das controllers do projeto
 const controllerFilme           = require('./controller/filme/controller_filme.js')
+const controllerFilmeGenero     = require('./controller/filme/controller_filme_genero.js')
 const controllerGenero          = require('./controller/genero/controller_genero.js')
 const controllerClassificacao   = require('./controller/classificacao/controllerClassificacao.js')
 const controllerProfissional    = require('./controller/profissional/controllerProfissional.js')
@@ -107,6 +108,7 @@ app.delete('/v1/senai/locadora/filme/:id', async function (request, response){
 
 
 
+
 // ENDPOINTS SOBRE O GÊNERO
 
 // endpoint para o CRUD do gênero
@@ -142,7 +144,7 @@ app.get('/v1/senai/locadora/genero/:id', async function(request, response) {
     response.json(result)
 })
 
-// endpoint para atualizar um filme
+// endpoint para atualizar um gênero
 app.put('/v1/senai/locadora/genero/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
@@ -304,7 +306,7 @@ app.delete('/v1/senai/locadora/profissional/:id', async function(request, respon
 
 // ENDPOINTS SOBRE A NACIONALIDADE  
 
-// endpoint para inserir a nascionalidade
+// endpoint para inserir a nacionalidade
 app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(request, response) {
    
     //Guardando os dados do body para utilizar no CRUD
@@ -319,7 +321,7 @@ app.post('/v1/senai/locadora/nacionalidade', bodyParserJSON, async function(requ
 
 })
 
-// endpoint para listar por ID a nascionalidade
+// endpoint para listar por ID a nacionalidade
 app.get('/v1/senai/locadora/nacionalidade/:id', async function(request, response) {
     let id = request.params.id
 
@@ -330,7 +332,7 @@ app.get('/v1/senai/locadora/nacionalidade/:id', async function(request, response
 
 })
 
-// endpoint para atualizar uma nascionalidade
+// endpoint para atualizar uma nacionalidade
 app.put('/v1/senai/locadora/nacionalidade/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
@@ -349,7 +351,7 @@ app.put('/v1/senai/locadora/nacionalidade/:id', bodyParserJSON, async function(r
     response.json(result)
 })
 
-// endpoint para listar as nascionalidades
+// endpoint para listar as nacionalidades
 app.get('/v1/senai/locadora/nacionalidade', async function(request, response) {
 
     let result = await controllerNacionalidade.listarNacionalidade()
@@ -372,7 +374,7 @@ app.delete('/v1/senai/locadora/nacionalidade/:id', async function(request, respo
 
 // ENDPOINTS SOBRE O CARGO
 
-// endpoint para inserir a nascionalidade
+// endpoint para inserir o cargo
 app.post('/v1/senai/locadora/cargo', bodyParserJSON, async function(request, response) {
    
     //Guardando os dados do body para utilizar no CRUD
@@ -387,7 +389,7 @@ app.post('/v1/senai/locadora/cargo', bodyParserJSON, async function(request, res
 
 })
 
-// endpoint para listar por ID a nascionalidade
+// endpoint para listar por ID o cargo
 app.get('/v1/senai/locadora/cargo/:id', async function(request, response) {
     let id = request.params.id
 
@@ -398,7 +400,7 @@ app.get('/v1/senai/locadora/cargo/:id', async function(request, response) {
 
 })
 
-// endpoint para atualizar uma nascionalidade
+// endpoint para atualizar um cargo
 app.put('/v1/senai/locadora/cargo/:id', bodyParserJSON, async function(request, response) {
 
     // Recebe o id do registro a ser atualizado.
@@ -417,7 +419,7 @@ app.put('/v1/senai/locadora/cargo/:id', bodyParserJSON, async function(request, 
     response.json(result)
 })
 
-// endpoint para listar as nascionalidades
+// endpoint para listar os cargos
 app.get('/v1/senai/locadora/cargo', async function(request, response) {
 
     let result = await controllerCargo.listarCargo()
@@ -426,7 +428,7 @@ app.get('/v1/senai/locadora/cargo', async function(request, response) {
     
 })
 
-// endpoint para deletar algum profissional
+// endpoint para deletar algum cargo
 app.delete('/v1/senai/locadora/cargo/:id', async function(request, response) {
     let id = request.params.id
     let result = await controllerCargo.excluirCargo(id)
@@ -501,6 +503,7 @@ app.delete('/v1/senai/locadora/papel/:id', async function(request, response) {
 
 
 // ENDPOINTS SOBRE A FILMOGRAFIA
+
 //Endpoint para cadastrar uma nova filmografia
 app.post('/v1/senai/locadora/filmografia', bodyParserJSON, async function(request, response) {
     
@@ -558,8 +561,8 @@ app.delete('/v1/senai/locadora/filmografia/:id', async function(request, respons
 })
 
 
+
 // Faz um start na API (Aguardando requisição)
 app.listen(8080, function(){
     console.log('API aguardando novas requisições...')
 })
-
