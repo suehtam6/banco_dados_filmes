@@ -328,11 +328,11 @@ update tbl_filme_genero set
     id_genero = 2
     where id = 1;
     
-select * from tbl_filme_genero order by id desc;
+select * from tbl_filme order by id desc;
 select * from tbl_filme_genero order by id =1;
 
-delete from tbl_filme_genero where id = 1;
-
+#delete from tbl_filme_genero;
+#delete from tbl_filme;
 #drop table tbl_filme_genero;
 
 

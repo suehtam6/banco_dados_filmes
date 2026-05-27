@@ -14,7 +14,7 @@ const knexDataBaseConfig = require('../../database_config/knexConfig.js')
 // Criar a conexão com o banco de dados mySQL conforme o arquivo de configuração.
 const knexConection = knex(knexDataBaseConfig.development)
 
-
+//Função para inserir um filme genero
 const insertFilmeGenero = async function(dados) {
     
     try {
@@ -43,7 +43,7 @@ const insertFilmeGenero = async function(dados) {
     }
 
 }
-
+//Função para atualizar um filme genero
 const updateFilmeGenero = async function(dados) {
 
     try {
@@ -69,6 +69,7 @@ const updateFilmeGenero = async function(dados) {
 
 }
 
+//Função para selecionar todos os filme genero
 const selectAllFilmeGenero = async function() {
     
     try {
@@ -93,6 +94,7 @@ const selectAllFilmeGenero = async function() {
 
 }
 
+//Função para selecionar por id cada filme genero
 const selectByIdFilmeGenero = async function(id) {
     try {
         // Script SQL para listar o filme de acordo com o ID.
@@ -140,7 +142,6 @@ const selectGenerosByIdFilme = async function(idfilme) {
     }
 }
 
-
 //Função para retornar os dados do Gênero filtrando pelo ID do filme
 const selectFilmesByIdGenero = async function(idGenero) {
     try {
@@ -168,12 +169,28 @@ const selectFilmesByIdGenero = async function(idGenero) {
     }
 }
 
-
-
-
+//Função para deletar um filme genero
 const deleteFilmeGenero = async function(id) {
     try {
         let sql = `delete from tbl_filme_genero where id=${id};`
+
+        let result = await knexConection.raw(sql)
+        if (result) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+}
+
+//Função para excluir os gêneros relacionados com um filme
+//OBS: Esta função será utilizada no PUT do Filme
+const deleteGenerosByIdFilme = async function(idFilme) {
+    try {
+        let sql = `delete from tbl_filme_genero where id_filme=${idFilme};`
 
         let result = await knexConection.raw(sql)
         if (result) {
@@ -195,5 +212,6 @@ module.exports = {
     selectByIdFilmeGenero,
     selectFilmesByIdGenero,
     selectGenerosByIdFilme,
-    deleteFilmeGenero
+    deleteFilmeGenero,
+    deleteGenerosByIdFilme
 }

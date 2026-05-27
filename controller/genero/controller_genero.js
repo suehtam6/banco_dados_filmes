@@ -176,7 +176,7 @@ const excluirGenero = async function(id) {
 }
 
 const validarDados = async function(genero) {
-    if(genero.genero == undefined || genero.genero == '' || genero.genero == null || genero.genero.length > 15){
+    if(genero.genero == undefined || genero.genero == '' || genero.genero == null || genero.genero.length > 30){
         customMessage.ERROR_BAD_REQUEST.field = '[GÊNERO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     }else{
