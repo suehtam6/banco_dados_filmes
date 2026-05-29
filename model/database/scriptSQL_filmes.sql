@@ -271,7 +271,8 @@ alter table tbl_classificacao
 	modify column classificacao varchar(30) not null;
     
     
-    
+alter table tbl_genero
+	modify column genero varchar(30) not null;
     
 create table tbl_filmografia(
 	id int not null auto_increment primary key,
@@ -337,4 +338,64 @@ select * from tbl_filme_genero order by id =1;
 
 
 #---------------------------------- DIA 2026-05-22 --------------------------------------#
+
+
+#---------------------------------- DIA 2026-05-29 --------------------------------------#
+
+create table tbl_profissional_cargo(
+	id int not null auto_increment primary key,
+    id_profissional int not null,
+    id_cargo int not null,
+	
+	constraint FK_PROFISSIONAL_PROFISSIONALCARGO
+    foreign key (id_profissional)
+    references tbl_profissional(id),
+    
+    constraint FK_PROFISSIONAL_PROFISSIONALCARGO
+    foreign key (id_cargo)
+    references tbl_cargo(id)
+    
+    
+);
+
+
+create table tbl_filme_profissional_cargo(
+	id int not null auto_increment primary key,
+    id_filme int not null,
+    id_profissional_cargo int not null,
+    
+    constraint FK_FILME_FILMEPROFISSIONALCARGO
+    foreign key (id_filme)
+    references tbl_filme(id),
+    
+    constraint FK_PROFISSIONAL_FILMEPROFISSIONALCARGO
+    foreign key (id_profissional_cargo)
+    references tbl_profissional_cargo(id)
+    
+);
+
+insert into tbl_filme_profissional_cargo(
+	id_filme,
+    id_profissional_cargo
+)values(
+	97,
+    1
+);
+
+
+update tbl_filme_profissional_cargo set
+	id_filme = 85,
+    id_genero = 2
+    where id = 1;
+
+
+drop table tbl_filme_profissional;
+
+select * from tbl_filme;
+select * from tbl_profissional order by id desc;
+select * from tbl_filme_profissional order by id desc;
+select * from tbl_filme_profisisonal order by id =1;
+
+
+#---------------------------------- DIA 2026-05-29 --------------------------------------#
 

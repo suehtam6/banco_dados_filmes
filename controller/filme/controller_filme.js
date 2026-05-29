@@ -14,6 +14,7 @@ const filmeDAO = require('../../model/DAO/filme/filme.js')
 //Import das controllers
 const controllerClassificacao = require('../classificacao/controllerClassificacao.js')
 const controllerFilmeGenero = require('./controller_filme_genero.js')
+const controllerFilmeProfissional = require('./controller_filme_profissional_cargo.js')
 
 
 // Função para inserir um novo filme.
@@ -61,6 +62,25 @@ const inserirNovoFilme = async function (filme, contentType) {
 
                         // Validação para verificar se todos os itens de relacionamento foram inseridos!!
                         if (!resultFilmeGenero.status) {
+                            return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
+                        }
+                    }
+
+                    // Manipulação de dados para inserir os profissionais relacionados ao filme.
+                    //Percorre o ARRAY de profissionais que chegará na requisição pelo objeto Filme
+                    for (itemProfissional of filme.profissional) {
+
+
+                        let filmeProfissional = {
+                            "id_filme": filme.id,
+                            "id_profissional": itemProfissional.id
+                        }
+
+
+                        let resultBuscarFilmeProfissional = await controllerFilmeProfissional.inserirNovoFilmeProfissional(filmeProfissional)
+
+                        // Validação para verificar se todos os itens de relacionamento foram inseridos!!
+                        if (!resultBuscarFilmeProfissional.status) {
                             return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
                         }
                     }
@@ -136,6 +156,25 @@ const atualizarFilme = async function (filme, id, contentType) {
 
                                     // Validação para verificar se todos os itens de relacionamento foram inseridos!!
                                     if (!resultFilmeGenero.status) {
+                                        return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
+                                    }
+                                }
+
+                                // Manipulação de dados para inserir os profissionais relacionados ao filme.
+                                //Percorre o ARRAY de profissionais que chegará na requisição pelo objeto Filme
+                                for (itemProfissional of filme.profissional) {
+
+
+                                    let filmeProfissional = {
+                                        "id_filme": filme.id,
+                                        "id_profissional": itemProfissional.id
+                                    }
+
+
+                                    let resultBuscarFilmeProfissional = await controllerFilmeProfissional.inserirNovoFilmeProfissional(filmeProfissional)
+
+                                    // Validação para verificar se todos os itens de relacionamento foram inseridos!!
+                                    if (!resultBuscarFilmeProfissional.status) {
                                         return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
                                     }
                                 }
@@ -224,6 +263,15 @@ const listarFilme = async function () {
 
                     } else {
                         return resultGeneros
+                    }
+
+                    //Manipulação de dados para retornar os profissionais relacionados aos filmes.
+                    let resultProfissional = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
+
+                    if(resultProfissional.status){
+                        filme.profissional = resultProfissional.response.filme_profissional
+                    }else{
+                        return resultProfissional
                     }
 
 

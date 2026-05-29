@@ -10,31 +10,57 @@ const configMessages = require('../modulo/configMessages.js')
 
 // Import do arquido DAO para manipular os dados do profissional no Banco de Dados.
 const profissionalDAO = require('../../model/DAO/profissional/profissional.js')
+const controllerProfissionalCargoDAO = require('./controllerProfissionalCargo.js')
 
-const inserirNovoProfissional   = async function (dados, contentType) {
+const inserirNovoProfissional = async function (dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
             let validar = await validarDados(dados)
 
-            if(!validar){
+            if (!validar) {
+                
                 let result = await profissionalDAO.insertProfissional(await tratarDados(dados))
-                if(result){
+                
+                if (result) {
+
                     dados.id = result
+
+                    // Manipulação de dados para inserir os gêneros relacionados ao filme.
+                    //Percorre o ARRAY de gêneros que chegará na requisição pelo objeto Filme
+                    for (itemCargo of dados.cargo) {
+
+
+                        let profissionalCargo = {
+                            "id_profissional": dados.id,
+                            "id_cargo": itemCargo.id
+                        }
+
+
+                        let resultProfissionalCargo = await controllerProfissionalCargoDAO.inserirNovoProfissionalCargo(profissionalCargo)
+                        console.log(resultProfissionalCargo)
+                        // Validação para verificar se todos os itens de relacionamento foram inseridos!!
+                        if (!resultProfissionalCargo.status) {
+                            return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
+                        }
+                    }
+
+
+                    
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATE_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATE_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATE_ITEM.message
                     customMessage.DEFAULT_MESSAGE.response = dados
 
                     return customMessage.DEFAULT_MESSAGE
-                }else{
+                } else {
                     return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
                 }
-            }else{
+            } else {
                 return validar //RETORNA 400
             }
-        }else{
+        } else {
             return customMessage.ERROR_CONTENT_TYPE // RETORNA UM 415
         }
     } catch (error) {
@@ -43,25 +69,25 @@ const inserirNovoProfissional   = async function (dados, contentType) {
 
 }
 
-const atualizarProfissional     = async function (dados, id, contentType) {
+const atualizarProfissional = async function (dados, id, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
-    
+
     try {
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
             let resultBuscarProfissional = await buscarProfissional(id)
 
             //Verificando o status do buscarProfissional
-            if(resultBuscarProfissional.status){
-                if(resultBuscarProfissional){
+            if (resultBuscarProfissional.status) {
+                if (resultBuscarProfissional) {
 
-                    
+
                     let validar = await validarDados(dados)
-                    if(!validar){
+                    if (!validar) {
 
                         dados.id = Number(id)
                         let result = await profissionalDAO.updateProfissional(await tratarDados(dados))
 
-                        if(result){
+                        if (result) {
                             customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
                             customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                             customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_UPDATED_ITEM.message
@@ -69,40 +95,40 @@ const atualizarProfissional     = async function (dados, id, contentType) {
 
                             return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
 
-                        }else{
+                        } else {
                             return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
                         }
 
-                    }else{
+                    } else {
                         return validar // RETORNA UM 400
                     }
-                }else{
+                } else {
                     return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
                 }
 
 
-            }else{
+            } else {
                 return resultBuscarProfissional // RETORNA UM 400 ou 404
             }
 
 
-        }else{
+        } else {
             return customMessage.ERROR_CONTENT_TYPE // RETORNA UM 415
         }
     } catch (error) {
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (CONTROLLER)
     }
-    
+
 }
 
-const listarProfissional        = async function () {
+const listarProfissional = async function () {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
         let result = await profissionalDAO.selectAllProfissional()
-        if(result){
+        if (result) {
 
-            if(result.length > 0){
+            if (result.length > 0) {
 
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code // RETORNA UM 200
@@ -111,12 +137,12 @@ const listarProfissional        = async function () {
 
                 return customMessage.DEFAULT_MESSAGE
 
-            }else{
+            } else {
                 return customMessage.ERROR_NOT_FOUND // RETORNA UM 404 
             }
 
 
-        }else{
+        } else {
             return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
         }
     } catch (error) {
@@ -124,21 +150,21 @@ const listarProfissional        = async function () {
     }
 }
 
-const buscarProfissional        = async function (id) {
-     let customMessage = JSON.parse(JSON.stringify(configMessages))
+const buscarProfissional = async function (id) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
 
-     try {
-        if(id == undefined || String(id).replaceAll(' ', '') == '' || id == null || isNaN(id) || id <= 0){
+    try {
+        if (id == undefined || String(id).replaceAll(' ', '') == '' || id == null || isNaN(id) || id <= 0) {
             customMessage.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
             return customMessage.ERROR_BAD_REQUEST // RETORNA UM 400
-        }else{
+        } else {
             let result = await profissionalDAO.selectByIdProfissional(id)
 
             //Verificando se está tudo correto
-            if(result){
+            if (result) {
 
                 //Verificando se está vazio
-                if(result.length > 0){
+                if (result.length > 0) {
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
@@ -146,41 +172,41 @@ const buscarProfissional        = async function (id) {
 
                     return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
 
-                }else{
+                } else {
                     return customMessage.ERROR_NOT_FOUND // RETORNA UM 404
                 }
 
-            }else{
+            } else {
                 return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
             }
         }
-     } catch (error) {
+    } catch (error) {
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (CONTROLLER)
-     }
+    }
 }
 
-const excluirProfissional       = async function (id) {
+const excluirProfissional = async function (id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
         let resultBuscarProfissional = await buscarProfissional(id)
 
         // Verificando se o retorna é verdadeiro(true)
-        if(resultBuscarProfissional.status){
+        if (resultBuscarProfissional.status) {
             let result = await profissionalDAO.deleteProfissional(id)
-            
-            if(result){
+
+            if (result) {
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_DELETED_ITEM.status_code
                 customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_DELETED_ITEM.message
-                
+
                 return customMessage.DEFAULT_MESSAGE // RETORNA UM 200 PARA ENVIAR UMA MENSAGEM DE OK!!
-            }else{
+            } else {
                 return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
             }
 
 
-        }else{
+        } else {
             return resultBuscarProfissional // Retorna um 404
         }
 
@@ -219,7 +245,7 @@ const validarDados = async function (dados) {
 }
 
 
-const tratarDados = async function(dados) {
+const tratarDados = async function (dados) {
 
     //Trantando entrade de aspas (') dentro do projeto
     dados.nome = dados.nome.replaceAll("'", "")
