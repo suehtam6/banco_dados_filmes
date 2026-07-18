@@ -9,7 +9,7 @@
 const configMessages = require('../modulo/configMessages.js')
 
 //Importando o arquivo do DAO para manipular os filmeProfissional no BD
-const filmeProfissionalDAO = require('../../model/DAO/filme_profissional_cargo/filme_profissional_cargo.js')
+const filmeProfissionalDAO = require('../../model/DAO/filme_profissional_cargo/filme_profissional_cargo_papel.js')
 
 //Função para inserir um novo FilmeProfissional
 const inserirNovoFilmeProfissional = async function (filmeProfissional) {
@@ -285,7 +285,10 @@ const validarDados = async function (filmeProfissional) {
     } else if (filmeProfissional.id_cargo == undefined || String(filmeProfissional.id_cargo).replaceAll(' ', '') == '' || filmeProfissional.id_cargo == null || isNaN(filmeProfissional.id_cargo) || filmeProfissional.id_cargo <= 0) {
         customMessage.ERROR_BAD_REQUEST.field = '[ID CARGO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
-    } else {
+    } else if (filmeProfissional.id_papel == undefined || String(filmeProfissional.id_papel).replaceAll(' ', '') == '' || filmeProfissional.id_papel == null || isNaN(filmeProfissional.id_papel) || filmeProfissional.id_papel <= 0) {
+        customMessage.ERROR_BAD_REQUEST.field = '[ID PAPEL] INVÁLIDO'
+        return customMessage.ERROR_BAD_REQUEST
+    }else {
         return false
     }
 

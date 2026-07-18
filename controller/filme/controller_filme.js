@@ -14,7 +14,7 @@ const filmeDAO = require('../../model/DAO/filme/filme.js')
 //Import das controllers
 const controllerClassificacao = require('../classificacao/controllerClassificacao.js')
 const controllerFilmeGenero = require('./controller_filme_genero.js')
-const controllerFilmeProfissional = require('./controller_filme_profissional_cargo.js')
+const controllerFilmeProfissional = require('./controller_filme_profissional_cargo_papel.js')
 
 
 // Função para inserir um novo filme.
@@ -73,7 +73,8 @@ const inserirNovoFilme = async function (filme, contentType) {
                         let filmeProfissional = {
                             "id_filme": filme.id,
                             "id_profissional": itemProfissional.id_profissional,
-                            "id_cargo": itemProfissional.id_cargo
+                            "id_cargo": itemProfissional.id_cargo,
+                            "id_papel": itemProfissional.id_papel
                         }
 
                         let resultBuscarFilmeProfissional = await controllerFilmeProfissional.inserirNovoFilmeProfissional(filmeProfissional)
@@ -167,7 +168,8 @@ const atualizarFilme = async function (filme, id, contentType) {
                                     let filmeProfissional = {
                                     "id_filme": filme.id,
                                     "id_profissional": itemProfissional.id_profissional,
-                                    "id_cargo": itemProfissional.id_cargo
+                                    "id_cargo": itemProfissional.id_cargo,
+                                    "id_papel": itemProfissional.id_papel
                                     }
 
 
@@ -228,10 +230,12 @@ const listarFilme = async function () {
     try {
         // Solicitando a função do selectALLFilme que está dentro do DAO.
         let result = await filmeDAO.selectAllFilme()
+        console.log(result)
+
 
         // Validação para verificar se o DAO conseguiu processar o script no BD.
         if (result) {
-
+            
             // Validação para verificar se o conteúdo do ARRAY tem dados de retorno ou se está vazio
             if (result.length > 0) {
 
@@ -265,14 +269,15 @@ const listarFilme = async function () {
                         return resultGeneros
                     }
 
-                    let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
+                   let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
 
                     if (resultProfissionalCargo.status) {
                         filme.profissional = resultProfissionalCargo.response.filme_profissional
+                    } else if (resultProfissionalCargo.status_code == 404) {
+                        filme.profissional = []
                     } else {
                         return resultProfissionalCargo
                     }
-
 
                 }
 
@@ -351,12 +356,13 @@ const buscarFilme = async function (id) {
 
                         let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
 
-                        if (resultProfissionalCargo.status) {
-                            filme.profissional = resultProfissionalCargo.response.filme_profissional
-                        } else {
-                            return resultProfissionalCargo
-                        }
-
+                    if (resultProfissionalCargo.status) {
+                        filme.profissional = resultProfissionalCargo.response.filme_profissional
+                    } else if (resultProfissionalCargo.status_code == 404) {
+                        filme.profissional = []
+                    } else {
+                        return resultProfissionalCargo
+                    }
                     }
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status

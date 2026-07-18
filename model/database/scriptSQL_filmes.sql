@@ -202,7 +202,7 @@ select * from tbl_nacionalidade where id = 1;
 
 desc tbl_nacionalidade;
 
-drop table tbl_nacionalidade;
+#drop table tbl_nacionalidade;
 
 #---------------------------------- DIA 2026-05-14 --------------------------------------#
 
@@ -345,41 +345,49 @@ select * from tbl_filme_genero order by id =1;
 #---------------------------------- DIA 2026-05-29 --------------------------------------#
 
 
-create table tbl_filme_profissional_cargo(
+create table tbl_filme_profissional_cargo_papel(
 	id int not null auto_increment primary key,
     id_filme int not null,
     id_profissional int not null,
     id_cargo int not null,
+    id_papel int not null,
     
-    constraint FK_FILME_FILMEPROFISSIONALCARGO
+    constraint FK_FILME_FILMEPROFISSIONALCARGOPAPEL
     foreign key (id_filme)
     references tbl_filme(id),
     
-    constraint FK_PROFISSIONAL_FILMEPROFISSIONALCARGO
+    constraint FK_PROFISSIONAL_FILMEPROFISSIONALCARGOPAPEL
     foreign key (id_profissional)
     references tbl_profissional(id),
     
-    constraint FK_CARGO_FILMEPROFISSIONALCARGO
+    constraint FK_CARGO_FILMEPROFISSIONALCARGOPAPEL
     foreign key (id_cargo)
-    references tbl_cargo(id)
+    references tbl_cargo(id),
+    
+    constraint FK_PAPEL_FILMEPROFISSIONALCARGOPAPEL
+    foreign key (id_papel)
+    references tbl_papel(id)
     
 );
 
-insert into tbl_filme_profissional_cargo(
+insert into tbl_filme_profissional_cargo_papel(
 	id_filme,
     id_profissional,
-    id_cargo
+    id_cargo,
+    id_papel
 )values(
 	1,
+    1,
     1,
     1
 );
 
 
-update tbl_filme_profissional_cargo set
+update tbl_filme_profissional_cargo_papel set
 	id_filme = 1,
     id_profissional = 1,
-    id_cargo = 1
+    id_cargo = 1,
+    id_papel = 1
     where id = 1;
 
 
@@ -387,8 +395,8 @@ update tbl_filme_profissional_cargo set
 
 select * from tbl_filme;
 select * from tbl_profissional order by id desc;
-select * from tbl_filme_profissional_cargo order by id desc;
-select * from tbl_filme_profissional_cargo where id = 1;
+select * from tbl_filme_profissional_cargo_papel order by id desc;
+select * from tbl_filme_profissional_cargo_papel where id = 1;
 
 
 DELIMITER $
@@ -400,7 +408,9 @@ DELIMITER $
 
 	END $
     
-show triggers;
+    
+#delete from tbl_filme where id = 8;
+#show triggers;
 
 #---------------------------------- DIA 2026-05-29 --------------------------------------#
 
