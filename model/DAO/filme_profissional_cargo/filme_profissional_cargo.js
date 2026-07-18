@@ -1,5 +1,5 @@
 /**************************************************************************************************************************
- * Objetivo: Arquivo responsável pelo CRUD de dados sobre o filme e o profissional no banco de dados mySQL
+ * Objetivo: Arquivo responsável pelo CRUD de dados sobre o filme, o profissional e o cargo no banco de dados mySQL
  * Data: 2026/05/29
  * Autor: Matheus Lucas
  * Versão: 1.0
@@ -15,16 +15,18 @@ const knexDataBaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexDataBaseConfig.development)
 
 //Função para inserir um filme Profissional
-const insertFilmeProfissional = async function(dados) {
-    
+const insertFilmeProfissional = async function (dados) {
+
     try {
-        
-        let sql = `insert into tbl_filme_profissional(
+
+        let sql = `insert into tbl_filme_profissional_cargo(
                         id_filme,
-                        id_profissional
+                        id_profissional,
+                        id_cargo
                     )values(
                         ${dados.id_filme},
-                        ${dados.id_profissional}
+                        ${dados.id_profissional},
+                        ${dados.id_cargo}
                     );`
 
         // Coloca o script SQL dentro do banco de dados
@@ -43,14 +45,16 @@ const insertFilmeProfissional = async function(dados) {
     }
 
 }
+
 //Função para atualizar um filme Profissional
-const updateFilmeProfissional = async function(dados) {
+const updateFilmeProfissional = async function (dados) {
 
     try {
 
-        let sql = `update tbl_filme_profissional set
+        let sql = `update tbl_filme_profissional_cargo set
                     id_filme = ${dados.id_filme},
-                    id_profissional = ${dados.id_profissional}
+                    id_profissional = ${dados.id_profissional},
+                    id_cargo = ${dados.id_cargo}
                     where id = ${dados.id};`
 
         let result = await knexConection.raw(sql)
@@ -66,24 +70,23 @@ const updateFilmeProfissional = async function(dados) {
         return false
     }
 
-
 }
 
 //Função para selecionar todos os filme Profissional
-const selectAllFilmeProfissional = async function() {
-    
+const selectAllFilmeProfissional = async function () {
+
     try {
         // Script SQL para listar todos os filmes.
-        let sql = 'select * from tbl_filme_profissional order by id desc;'
+        let sql = 'select * from tbl_filme_profissional_cargo order by id desc;'
 
         // Executa no BD o script e guarda o retorno do BD,
         // Pode ser um ERRO(false) ou um ARRAY com os dados.
         let result = await knexConection.raw(sql)
-        
+
         // Verificando se o que está retornando é um ARRAY ou não.
         if (Array.isArray(result)) {
             return result[0] // Retorna somente o índice com a lista de filmes.
-            
+
         } else {
             return false
         }
@@ -95,13 +98,12 @@ const selectAllFilmeProfissional = async function() {
 }
 
 //Função para selecionar por id cada filme Profissional
-const selectByIdFilmeProfissional = async function(id) {
+const selectByIdFilmeProfissional = async function (id) {
     try {
         // Script SQL para listar o filme de acordo com o ID.
-        let sql = `select * from tbl_filme_profissional where id=${id};`
+        let sql = `select * from tbl_filme_profissional_cargo where id=${id};`
 
         let result = await knexConection.raw(sql)
-
 
         if (Array.isArray(result)) {
             return result[0]
@@ -115,21 +117,22 @@ const selectByIdFilmeProfissional = async function(id) {
     }
 }
 
-//Função para retornar os dados do Gênero filtrando pelo ID do filme
-const selectProfissionalsByIdFilme = async function(idfilme) {
+//Função para retornar os dados do Profissional filtrando pelo ID do filme
+const selectProfissionalsByIdFilme = async function (idfilme) {
     try {
         // Script SQL para listar o filme de acordo com o ID.
-        let sql = `select tbl_profissional.*
+        let sql = `select tbl_profissional.*, tbl_cargo.cargo, tbl_filme_profissional_cargo.id_cargo
                     from tbl_filme
-                        inner join tbl_filme_profissional
-                            on tbl_filme.id = tbl_filme_profissional.id_filme
+                        inner join tbl_filme_profissional_cargo
+                            on tbl_filme.id = tbl_filme_profissional_cargo.id_filme
                         inner join tbl_profissional
-                            on tbl_profissional.id = tbl_filme_profissional.id_profissional
+                            on tbl_profissional.id = tbl_filme_profissional_cargo.id_profissional
+                        inner join tbl_cargo
+                            on tbl_cargo.id = tbl_filme_profissional_cargo.id_cargo
                     where tbl_filme.id=${idfilme};`
 
         let result = await knexConection.raw(sql)
 
-
         if (Array.isArray(result)) {
             return result[0]
 
@@ -142,20 +145,19 @@ const selectProfissionalsByIdFilme = async function(idfilme) {
     }
 }
 
-//Função para retornar os dados do Gênero filtrando pelo ID do filme
-const selectFilmesByIdProfissional = async function(idProfissional) {
+//Função para retornar os dados do Filme filtrando pelo ID do profissional
+const selectFilmesByIdProfissional = async function (idProfissional) {
     try {
         // Script SQL para listar o filme de acordo com o ID.
         let sql = `select tbl_filme.*
                     from tbl_filme
-                        inner join tbl_filme_profissional
-                            on tbl_filme.id = tbl_filme_profissional.id_filme
+                        inner join tbl_filme_profissional_cargo
+                            on tbl_filme.id = tbl_filme_profissional_cargo.id_filme
                         inner join tbl_profissional
-                            on tbl_profissional.id = tbl_filme_profissional.id_profissional
+                            on tbl_profissional.id = tbl_filme_profissional_cargo.id_profissional
                     where tbl_profissional.id=${idProfissional};`
 
         let result = await knexConection.raw(sql)
-
 
         if (Array.isArray(result)) {
             return result[0]
@@ -170,9 +172,9 @@ const selectFilmesByIdProfissional = async function(idProfissional) {
 }
 
 //Função para deletar um filme Profissional
-const deleteFilmeProfissional = async function(id) {
+const deleteFilmeProfissional = async function (id) {
     try {
-        let sql = `delete from tbl_filme_profissional where id=${id};`
+        let sql = `delete from tbl_filme_profissional_cargo where id=${id};`
 
         let result = await knexConection.raw(sql)
         if (result) {
@@ -186,11 +188,11 @@ const deleteFilmeProfissional = async function(id) {
     }
 }
 
-//Função para excluir os gêneros relacionados com um filme
+//Função para excluir os profissionais relacionados com um filme
 //OBS: Esta função será utilizada no PUT do Filme
-const deleteProfissionalsByIdFilme = async function(idFilme) {
+const deleteProfissionalsByIdFilme = async function (idFilme) {
     try {
-        let sql = `delete from tbl_filme_profissional where id_filme=${idFilme};`
+        let sql = `delete from tbl_filme_profissional_cargo where id_filme=${idFilme};`
 
         let result = await knexConection.raw(sql)
         if (result) {

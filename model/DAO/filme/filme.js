@@ -48,7 +48,6 @@ const insertFilme = async function (filme) {
         // await serve para evitar do knexConection mande o scritp e ja comece a rodar as outras funções sem nem ter chegado no BD o script antigo.
         // E para utilizar o await a função tem que ser async.
         let result = await knexConection.raw(sql)
-
         if (result) {
             return result[0].insertId
         } else {
@@ -56,6 +55,7 @@ const insertFilme = async function (filme) {
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 
@@ -124,7 +124,6 @@ const selectByIdFilme = async function (id) {
 
         let result = await knexConection.raw(sql)
 
-
         if (Array.isArray(result)) {
             return result[0]
 
@@ -133,6 +132,7 @@ const selectByIdFilme = async function (id) {
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 

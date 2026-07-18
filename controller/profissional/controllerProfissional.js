@@ -10,7 +10,6 @@ const configMessages = require('../modulo/configMessages.js')
 
 // Import do arquido DAO para manipular os dados do profissional no Banco de Dados.
 const profissionalDAO = require('../../model/DAO/profissional/profissional.js')
-const controllerProfissionalCargoDAO = require('./controllerProfissionalCargo.js')
 
 const inserirNovoProfissional = async function (dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
@@ -26,27 +25,6 @@ const inserirNovoProfissional = async function (dados, contentType) {
                 if (result) {
 
                     dados.id = result
-
-                    // Manipulação de dados para inserir os gêneros relacionados ao filme.
-                    //Percorre o ARRAY de gêneros que chegará na requisição pelo objeto Filme
-                    for (itemCargo of dados.cargo) {
-
-
-                        let profissionalCargo = {
-                            "id_profissional": dados.id,
-                            "id_cargo": itemCargo.id
-                        }
-
-
-                        let resultProfissionalCargo = await controllerProfissionalCargoDAO.inserirNovoProfissionalCargo(profissionalCargo)
-                        console.log(resultProfissionalCargo)
-                        // Validação para verificar se todos os itens de relacionamento foram inseridos!!
-                        if (!resultProfissionalCargo.status) {
-                            return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
-                        }
-                    }
-
-
                     
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATE_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATE_ITEM.status_code

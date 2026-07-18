@@ -28,19 +28,19 @@ const inserirNovoFilme = async function (filme, contentType) {
     try {
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
             let validar = await validarDados(filme)
-
+            
             // Retorna um JSON de erro caso algum atributo seja inválido,
             // senão retorna um false(Não teve erro)
             if (validar) {
                 return validar // RETORNA UM 400
             } else {
-
-
+                
 
 
                 let tratarFilme = await tratarDados(await tratarDados(filme))
                 // Encaminha os dados fo Filme para o DAO inserir no banco de dados.
                 let result = await filmeDAO.insertFilme(tratarFilme)
+                
                 if (result) { // RETORNA UM 201
 
                     // Cria o ID do JSON do filme e adiciona o ID gerado no DAO
@@ -70,18 +70,16 @@ const inserirNovoFilme = async function (filme, contentType) {
                     //Percorre o ARRAY de profissionais que chegará na requisição pelo objeto Filme
                     for (itemProfissional of filme.profissional) {
 
-
                         let filmeProfissional = {
                             "id_filme": filme.id,
-                            "id_profissional": itemProfissional.id
+                            "id_profissional": itemProfissional.id_profissional,
+                            "id_cargo": itemProfissional.id_cargo
                         }
-
 
                         let resultBuscarFilmeProfissional = await controllerFilmeProfissional.inserirNovoFilmeProfissional(filmeProfissional)
 
-                        // Validação para verificar se todos os itens de relacionamento foram inseridos!!
                         if (!resultBuscarFilmeProfissional.status) {
-                            return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
+                            return customMessage.SUCCESS_CREATE_ITEM_WARNING
                         }
                     }
 
@@ -102,6 +100,7 @@ const inserirNovoFilme = async function (filme, contentType) {
 
 
     } catch (error) {
+        
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (Controller)
     }
 
@@ -166,8 +165,9 @@ const atualizarFilme = async function (filme, id, contentType) {
 
 
                                     let filmeProfissional = {
-                                        "id_filme": filme.id,
-                                        "id_profissional": itemProfissional.id
+                                    "id_filme": filme.id,
+                                    "id_profissional": itemProfissional.id_profissional,
+                                    "id_cargo": itemProfissional.id_cargo
                                     }
 
 
@@ -265,13 +265,12 @@ const listarFilme = async function () {
                         return resultGeneros
                     }
 
-                    //Manipulação de dados para retornar os profissionais relacionados aos filmes.
-                    let resultProfissional = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
+                    let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
 
-                    if(resultProfissional.status){
-                        filme.profissional = resultProfissional.response.filme_profissional
-                    }else{
-                        return resultProfissional
+                    if (resultProfissionalCargo.status) {
+                        filme.profissional = resultProfissionalCargo.response.filme_profissional
+                    } else {
+                        return resultProfissionalCargo
                     }
 
 
@@ -350,6 +349,13 @@ const buscarFilme = async function (id) {
                             return resultGeneros
                         }
 
+                        let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
+
+                        if (resultProfissionalCargo.status) {
+                            filme.profissional = resultProfissionalCargo.response.filme_profissional
+                        } else {
+                            return resultProfissionalCargo
+                        }
 
                     }
 

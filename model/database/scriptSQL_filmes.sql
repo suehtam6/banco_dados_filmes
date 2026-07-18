@@ -10,7 +10,28 @@ use db_filmes_20261_b;
 #Permite visualizar todas as tabelas existentes dentro do database
 show tables;
 
+
 #Permite criar tabelas
+
+#Criando tabela de classificacao
+create table tbl_classificacao(
+	id int not null auto_increment primary key,
+    classificacao varchar(30) not null
+);
+
+insert into tbl_classificacao(
+	classificacao
+)values(
+	classificacao = 'livre'
+);
+
+select * from tbl_classificacao order by id desc;
+
+update tbl_classificacao set
+	classificacao = '10'
+    where id=1;
+
+
 create table tbl_filme (
 	id					int not null auto_increment primary key,
     nome 				varchar(80) not null,
@@ -19,8 +40,15 @@ create table tbl_filme (
     data_lancamento 	date not null,
     duracao 			time not null,
     valor 				decimal(5,2) default 0,
-    avaliacao 			decimal(3,2) default null
+    avaliacao 			decimal(3,2) default null,
+    id_classificacao	int not null,
+    
+    constraint FK_CLASSIFICACAO_FILME
+	foreign key (id_classificacao)
+	references tbl_classificacao(id)
 );
+
+
 
 # Permite apagar qualquer tabela e até mesmo o database, !!não deve ser utilizado em nenhum momento caso tenho dados na tabela e database!!
 #drop table tbl_filme
@@ -34,7 +62,8 @@ insert into tbl_filme(
 	data_lancamento,
 	duracao,
 	valor,
-	avaliacao
+	avaliacao,
+    id_classificacao
 
 )values(
 	replace("Super Mario Galaxy: O Filme", "'", ""),
@@ -43,7 +72,8 @@ insert into tbl_filme(
     '2026-04-02',
     '01:39:00',
     '50.60',
-    if('', null, 2)
+    if('', null, 2),
+    1
     
 );
 
@@ -104,23 +134,7 @@ select * from tbl_genero order by id desc;
 
 show tables;
 
-#Criando tabela de classificacao
-create table tbl_classificacao(
-	id int not null auto_increment primary key,
-    classificacao varchar(8) not null
-);
 
-insert into tbl_classificacao(
-	classificacao
-)values(
-	classificacao = 'livre'
-);
-
-select * from tbl_classificacao order by id desc;
-
-update tbl_classificacao set
-	classificacao = '10'
-    where id=1;
 
 
 #---------------------------------- DIA 2026-05-08 --------------------------------------#
@@ -213,8 +227,8 @@ update tbl_cargo set
     
 select * from tbl_cargo order by id desc;
 
-select * from tbl_cargo where id = 3;
-delete from tbl_cargo where id = 1;
+select * from tbl_cargo where id = 1;
+#delete from tbl_cargo where id = 1;
 
 
 
@@ -238,7 +252,7 @@ select * from tbl_papel order by id desc;
 
 select * from tbl_papel where id = 1;
 
-delete from tbl_papel where id = 1;
+#delete from tbl_papel where id = 1;
 
 
 #---------------------------------- DIA 2026-05-15 --------------------------------------#
@@ -253,24 +267,12 @@ desc tbl_filme;
 
 #Primeiro devemos apagar todos os dados dentro da tabela filme, 
 # pois eles iriam ficar com a chave estrangeira null e daria erro.
-delete from tbl_filme;
+#delete from tbl_filme;
 
 select * from tbl_filme;
 
 #Logo quando você for atualizar o seu código, saiba que você vai ter que apagar sua tabela filme inteira.
 
-#Colocando o id da classificação dentro da tabela de filme.
-alter table tbl_filme
-	add column id_classificacao	int not null,
-    add constraint FK_CLASSIFICACAO_FILME
-		foreign key (id_classificacao)
-        references tbl_classificacao(id);
-        
-        
-alter table tbl_classificacao
-	modify column classificacao varchar(30) not null;
-    
-    
 alter table tbl_genero
 	modify column genero varchar(30) not null;
     
@@ -320,13 +322,13 @@ insert into tbl_filme_genero(
 	id_filme,
     id_genero
 )values(
-	87,
+	1,
     1
 );
 
 update tbl_filme_genero set
-	id_filme = 85,
-    id_genero = 2
+	id_filme = 1,
+    id_genero = 1
     where id = 1;
     
 select * from tbl_filme order by id desc;
@@ -342,60 +344,64 @@ select * from tbl_filme_genero order by id =1;
 
 #---------------------------------- DIA 2026-05-29 --------------------------------------#
 
-create table tbl_profissional_cargo(
-	id int not null auto_increment primary key,
-    id_profissional int not null,
-    id_cargo int not null,
-	
-	constraint FK_PROFISSIONAL_PROFISSIONALCARGO
-    foreign key (id_profissional)
-    references tbl_profissional(id),
-    
-    constraint FK_PROFISSIONAL_PROFISSIONALCARGO
-    foreign key (id_cargo)
-    references tbl_cargo(id)
-    
-    
-);
-
 
 create table tbl_filme_profissional_cargo(
 	id int not null auto_increment primary key,
     id_filme int not null,
-    id_profissional_cargo int not null,
+    id_profissional int not null,
+    id_cargo int not null,
     
     constraint FK_FILME_FILMEPROFISSIONALCARGO
     foreign key (id_filme)
     references tbl_filme(id),
     
     constraint FK_PROFISSIONAL_FILMEPROFISSIONALCARGO
-    foreign key (id_profissional_cargo)
-    references tbl_profissional_cargo(id)
+    foreign key (id_profissional)
+    references tbl_profissional(id),
+    
+    constraint FK_CARGO_FILMEPROFISSIONALCARGO
+    foreign key (id_cargo)
+    references tbl_cargo(id)
     
 );
 
 insert into tbl_filme_profissional_cargo(
 	id_filme,
-    id_profissional_cargo
+    id_profissional,
+    id_cargo
 )values(
-	97,
+	1,
+    1,
     1
 );
 
 
 update tbl_filme_profissional_cargo set
-	id_filme = 85,
-    id_genero = 2
+	id_filme = 1,
+    id_profissional = 1,
+    id_cargo = 1
     where id = 1;
 
 
-drop table tbl_filme_profissional;
+#drop table tbl_filme_profissional;
 
 select * from tbl_filme;
 select * from tbl_profissional order by id desc;
-select * from tbl_filme_profissional order by id desc;
-select * from tbl_filme_profisisonal order by id =1;
+select * from tbl_filme_profissional_cargo order by id desc;
+select * from tbl_filme_profissional_cargo where id = 1;
 
+
+DELIMITER $
+	create trigger tgrDeleteFilmeProfissionalCargo
+		before delete on tbl_filme
+			for each row
+				begin
+				delete from tbl_filme_profissional_cargo where id_filme = old.id;
+
+	END $
+    
+show triggers;
 
 #---------------------------------- DIA 2026-05-29 --------------------------------------#
 
+#drop database db_filmes_20261_b;

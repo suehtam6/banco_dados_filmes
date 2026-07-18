@@ -1,5 +1,5 @@
 /*************************************************************************************************************************
- * Objetivo: Arquivo responsável pela validação, tratamento, manipulação de filmeProfissional para realizar o CRUD de filme e profissional
+ * Objetivo: Arquivo responsável pela validação, tratamento, manipulação de filmeProfissional para realizar o CRUD de filme, profissional e cargo
  * Data: 2026-05-29
  * Autor: Matheus Lucas
  * Versão: 1.0
@@ -32,7 +32,7 @@ const inserirNovoFilmeProfissional = async function (filmeProfissional) {
                 customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATE_ITEM.message
                 customMessage.DEFAULT_MESSAGE.response = filmeProfissional
                 return customMessage.DEFAULT_MESSAGE // RETORNA UM 201
-                
+
             } else {
                 return customMessage.ERROR_INTERNAL_SERVER_MODEL //RETORNA UM 500 (MODEL)
             }
@@ -75,7 +75,9 @@ const atualizarFilmeProfissional = async function (filmeProfissional, id) {
                     } else {
                         return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA 500 (MODEL)
                     }
-                } // FECHA IF RESULT
+                } else { // fecha if !validar
+                    return validar // RETORNA 400 DA VALIDAÇÃO
+                }
             } // FECHA IF resultBuscarFilmeProfissional
 
         } else {
@@ -134,7 +136,7 @@ const buscarFilmeProfissional = async function (id) {
                 if (result.length > 0) {
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                    customMessage.DEFAULT_MESSAGE.response.filme_Profissional = result
+                    customMessage.DEFAULT_MESSAGE.response.filme_profissional = result
 
                     return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
                 } else {
@@ -168,7 +170,7 @@ const buscarProfissionalIdFilme = async function (idFilme) {
                 if (result.length > 0) {
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                    customMessage.DEFAULT_MESSAGE.response.filme_Profissional = result
+                    customMessage.DEFAULT_MESSAGE.response.filme_profissional = result
 
                     return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
                 } else {
@@ -186,13 +188,13 @@ const buscarProfissionalIdFilme = async function (idFilme) {
 }
 
 
-//Função para buscar um filme pelo ID do gênero
+//Função para buscar um filme pelo ID do profissional
 const buscarFilmesIdProfissional = async function (idProfissional) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
         if (idProfissional == undefined || String(idProfissional).replaceAll(' ', '') == '' || idProfissional == null || isNaN(idProfissional) || idProfissional <= 0) {
-            customMessage.ERROR_BAD_REQUEST.field = '[ID_Profissional] INVÁLIDO'
+            customMessage.ERROR_BAD_REQUEST.field = '[ID_PROFISSIONAL] INVÁLIDO'
             return customMessage.ERROR_BAD_REQUEST // RETORNA UM 400
         } else {
 
@@ -202,7 +204,7 @@ const buscarFilmesIdProfissional = async function (idProfissional) {
                 if (result.length > 0) {
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                    customMessage.DEFAULT_MESSAGE.response.filme_Profissional = result
+                    customMessage.DEFAULT_MESSAGE.response.filme_profissional = result
 
                     return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
                 } else {
@@ -248,7 +250,7 @@ const excluirFilmeProfissional = async function (id) {
     }
 }
 
-//Função para excluir a relação de gêneros com o Filme
+//Função para excluir a relação de profissionais com o Filme
 const excluirProfissionalsIdFilme = async function (idFilme) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
@@ -262,7 +264,7 @@ const excluirProfissionalsIdFilme = async function (idFilme) {
             customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_DELETED_ITEM.message
 
             return customMessage.DEFAULT_MESSAGE // RETORNA UM 200
-            
+
         } else {
             return customMessage.ERROR_INTERNAL_SERVER_MODEL // RETORNA UM 500 (MODEL)
         }
@@ -272,11 +274,16 @@ const excluirProfissionalsIdFilme = async function (idFilme) {
 }
 
 const validarDados = async function (filmeProfissional) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
     if (filmeProfissional.id_filme == undefined || String(filmeProfissional.id_filme).replaceAll(' ', '') == '' || filmeProfissional.id_filme == null || isNaN(filmeProfissional.id_filme) || filmeProfissional.id_filme <= 0) {
         customMessage.ERROR_BAD_REQUEST.field = '[ID FILME] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
-    } else if (filmeProfissional.id_Profissional == undefined || String(filmeProfissional.id_Profissional).replaceAll(' ', '') == '' || filmeProfissional.id_Profissional == null || isNaN(filmeProfissional.id_Profissional) || filmeProfissional.id_Profissional <= 0) {
-        customMessage.ERROR_BAD_REQUEST.field = '[ID GÊNERO] INVÁLIDO'
+    } else if (filmeProfissional.id_profissional == undefined || String(filmeProfissional.id_profissional).replaceAll(' ', '') == '' || filmeProfissional.id_profissional == null || isNaN(filmeProfissional.id_profissional) || filmeProfissional.id_profissional <= 0) {
+        customMessage.ERROR_BAD_REQUEST.field = '[ID PROFISSIONAL] INVÁLIDO'
+        return customMessage.ERROR_BAD_REQUEST
+    } else if (filmeProfissional.id_cargo == undefined || String(filmeProfissional.id_cargo).replaceAll(' ', '') == '' || filmeProfissional.id_cargo == null || isNaN(filmeProfissional.id_cargo) || filmeProfissional.id_cargo <= 0) {
+        customMessage.ERROR_BAD_REQUEST.field = '[ID CARGO] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
     } else {
         return false
