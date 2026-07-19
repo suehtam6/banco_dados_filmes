@@ -137,9 +137,9 @@ DELIMITER $
 
 		END $
         
-        
-select * from tbl_profissional_nacionalidade;
-select * from tbl_profissional;
+
+
+
 #drop database db_filmes_20261_b;
     
 

@@ -144,7 +144,7 @@ const deleteFilme = async function (id) {
         let sql = `delete from tbl_filme where id=${id};`
 
         let result = await knexConection.raw(sql)
-        
+    
         if (result) {
             return true
         } else {
@@ -152,6 +152,7 @@ const deleteFilme = async function (id) {
         }
 
     } catch (error) {
+        
         return false
     }
 }

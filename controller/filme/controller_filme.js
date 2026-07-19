@@ -264,7 +264,10 @@ const listarFilme = async function () {
                         filme.genero = resultGeneros.response.filme_genero
 
 
-                    } else {
+                    } else if(resultGeneros.status_code == 404){ // Aqui eu estou dizendo que se vier um 404 do gênero, ele não vai quebrar o codigo e vai continuar seguindo,
+                                                                 // Assim o codigo vai sair seguir evitando  erros
+                        filme.genero = []
+                    }else {
                         return resultGeneros
                     }
 
@@ -392,7 +395,7 @@ const excluirFilme = async function (id) {
         let resultBuscarFilme = await buscarFilme(id)
         if (resultBuscarFilme.status) {
             let result = await filmeDAO.deleteFilme(id)
-
+            
             if (result) {
 
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
