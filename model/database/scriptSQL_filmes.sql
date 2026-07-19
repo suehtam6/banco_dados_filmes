@@ -394,6 +394,7 @@ update tbl_filme_profissional_cargo_papel set
 #drop table tbl_filme_profissional;
 
 select * from tbl_filme;
+select * from tbl_papel;
 select * from tbl_profissional order by id desc;
 select * from tbl_filme_profissional_cargo_papel order by id desc;
 select * from tbl_filme_profissional_cargo_papel where id = 1;
@@ -413,5 +414,26 @@ DELIMITER $
 #show triggers;
 
 #---------------------------------- DIA 2026-05-29 --------------------------------------#
+
+#---------------------------------- DIA 2026-07-19 --------------------------------------#
+
+create table tbl_profissional_nacionalidade(
+	id int not null auto_increment primary key,
+    id_profissional int not null,
+    id_nacionalidade int not null,
+    
+    constraint FK_PROFISSIONAL_PROFISSIONALNACIONALIDADE
+    foreign key (id_profissional)
+    references tbl_profissional(id),
+    
+    constraint FK_NACIONALIDADE_PROFISSIONALNACIONALIDADE
+    foreign key (id_nacionalidade)
+    references tbl_nacionalidade(id)
+    
+);
+
+
+
+#---------------------------------- DIA 2026-07-19 --------------------------------------#
 
 #drop database db_filmes_20261_b;

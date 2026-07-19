@@ -10,6 +10,7 @@ const configMessages = require('../modulo/configMessages.js')
 
 // Import do arquido DAO para manipular os dados do profissional no Banco de Dados.
 const profissionalDAO = require('../../model/DAO/profissional/profissional.js')
+const controllerProfissionalNacionalidade = require('./controller_profissional_nacionalidade.js')
 
 const inserirNovoProfissional = async function (dados, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
@@ -19,13 +20,31 @@ const inserirNovoProfissional = async function (dados, contentType) {
             let validar = await validarDados(dados)
 
             if (!validar) {
-                
+
                 let result = await profissionalDAO.insertProfissional(await tratarDados(dados))
-                
+
                 if (result) {
 
                     dados.id = result
-                    
+
+                    for (itemNacionalidade of dados.nacionalidade) {
+
+                        let profissionalNacionalidade = {
+                            "id_profissional": dados.id,
+                            "id_nacionalidade": itemNacionalidade.id
+                        }
+
+                        let resultProfissionalNacionalidade = await controllerProfissionalNacionalidade.inserirNovoProfissionalNacionalidade(profissionalNacionalidade)
+
+                        // Validação para verificar se todos os itens de relacionamento foram inseridos!!
+                        if (!resultProfissionalNacionalidade.status) {
+                            return customMessage.SUCCESS_CREATE_ITEM_WARNING //201 com alerta de cadastro
+                        }
+
+                    }
+
+
+
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATE_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATE_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATE_ITEM.message
@@ -107,6 +126,24 @@ const listarProfissional = async function () {
         if (result) {
 
             if (result.length > 0) {
+
+                //Manipulação dos dados da Classificação, por que eu preciso que o usuário vejo a classificação que deseja e não o id, pois ele não deve saber qual é o id.
+                for (dados of result) {
+                    //Buscando a classificacao que tem em cada filme.
+                    //Busca na controller da classificacao o ID referente a FK da classificacao. (Explicação do professor)
+                    //Manipulação de dados para retornar os gêneros relacionados aos filmes.
+                    let resultNacionalidade = await controllerProfissionalNacionalidade.buscarNacionalidadeIDProfissional(dados.id)
+
+                    if (resultNacionalidade.status) {
+                        dados.nacionalidade = resultNacionalidade.response.profissional_nacionalidade
+
+
+                    } else {
+                        return resultNacionalidade
+                    }
+
+
+                }
 
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code // RETORNA UM 200

@@ -230,7 +230,6 @@ const listarFilme = async function () {
     try {
         // Solicitando a função do selectALLFilme que está dentro do DAO.
         let result = await filmeDAO.selectAllFilme()
-        console.log(result)
 
 
         // Validação para verificar se o DAO conseguiu processar o script no BD.
@@ -358,8 +357,6 @@ const buscarFilme = async function (id) {
 
                     if (resultProfissionalCargo.status) {
                         filme.profissional = resultProfissionalCargo.response.filme_profissional
-                    } else if (resultProfissionalCargo.status_code == 404) {
-                        filme.profissional = []
                     } else {
                         return resultProfissionalCargo
                     }

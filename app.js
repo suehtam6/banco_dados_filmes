@@ -17,7 +17,6 @@ const controllerProfissional    = require('./controller/profissional/controllerP
 const controllerNacionalidade   = require('./controller/nacionalidade/controllerNacionalidade.js')
 const controllerCargo           = require('./controller/cargo/controllerCargo.js')
 const controllerPapel           = require('./controller/papel/controllerPapel.js')
-const controllerFilmografia     = require('./controller/filmografia/controllerFilmografia.js')
 
 
 
@@ -375,64 +374,6 @@ app.delete('/v1/senai/locadora/papel/:id', async function(request, response) {
     response.json(result)
 })
 
-
-// ENDPOINTS SOBRE A FILMOGRAFIA
-
-//Endpoint para cadastrar uma nova filmografia
-app.post('/v1/senai/locadora/filmografia', bodyParserJSON, async function(request, response) {
-    
-    let dados = request.body
-
-    let contentType = request.headers["content-type"]
-
-    let result = await controllerFilmografia.inserirNovaFilmografia(dados, contentType)
-
-    response.status(result.status_code)
-    response.json(result)
-
-})
-
-//Endpoint para listar as filmografia cadastrados
-app.get('/v1/senai/locadora/filmografia', async function(request, response) {
-    
-    let result = await controllerFilmografia.listarFilmografia()
-
-    response.status(result.status_code)
-    response.json(result)
-})
-
-//Endpoint para buscar uma filmografia pelo id
-app.get('/v1/senai/locadora/filmografia/:id', async function(request, response) {
-    let id = request.params.id
-    
-    let result = await controllerFilmografia.buscarFilmografia(id)
-
-    response.status(result.status_code)
-    response.json(result)
-
-})
-
-//Endpoint para atualizar uma filmografia pelo id
-app.put('/v1/senai/locadora/filmografia/:id', bodyParserJSON, async function(request, response) {
-    let id = request.params.id
-    let dados = request.body    
-    let contentType = request.headers['content-type']
-
-    let result = await controllerFilmografia.atualizarFilmografia(dados, id, contentType)
-
-    response.status(result.status_code)
-    response.json(result)
-})
-
-//Endpoint para deletar uma filmografia pelo id
-app.delete('/v1/senai/locadora/filmografia/:id', async function(request, response) {
-    
-    let id = request.params.id
-    
-    let result = await controllerFilmografia.excluirFilmografia(id)
-    response.status(result.status_code)
-    response.json(result)
-})
 
 
 
