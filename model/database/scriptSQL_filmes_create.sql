@@ -133,13 +133,21 @@ DELIMITER $
 		before delete on tbl_filme
 			for each row
 				begin
-				delete from tbl_filme_profissional_cargo where id_filme = old.id;
-
+				delete from tbl_filme_profissional_cargo_papel where id_filme = old.id;
+                delete from tbl_filme_genero where id_filme = old.id;
+		END $
+        
+DELIMITER $
+	create trigger tgrDeleteProfissionalNacionalidade
+		before delete on tbl_profissional
+			for each row
+				begin
+					delete from tbl_profissional_nacionalidade where id_profissional = old.id;
 		END $
         
 
 
-
+#drop trigger tgrDeleteFilmeProfissionalCargo;
 #drop database db_filmes_20261_b;
     
 

@@ -263,9 +263,9 @@ const listarFilme = async function () {
                     if (resultGeneros.status) {
                         filme.genero = resultGeneros.response.filme_genero
 
-
-                    } else if(resultGeneros.status_code == 404){ // Aqui eu estou dizendo que se vier um 404 do gênero, ele não vai quebrar o codigo e vai continuar seguindo,
-                                                                 // Assim o codigo vai sair seguir evitando  erros
+                    // Aqui eu estou dizendo que se vier um 404 do gênero, ele não vai quebrar o codigo e vai continuar seguindo,
+                    // Assim o codigo vai sair seguir evitando  erros
+                    } else if(resultGeneros.status_code == 404){ 
                         filme.genero = []
                     }else {
                         return resultGeneros
