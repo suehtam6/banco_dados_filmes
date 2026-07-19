@@ -61,7 +61,6 @@ const selectAllCargo = async function() {
         let sql = `select * from tbl_cargo order by id desc;`
 
         let result = await knexConection.raw(sql)
-        console.log(result)
         if(Array.isArray(result)){
             return result[0]
         }else{
