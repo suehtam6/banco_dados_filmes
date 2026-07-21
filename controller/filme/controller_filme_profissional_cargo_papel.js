@@ -251,7 +251,7 @@ const excluirFilmeProfissional = async function (id) {
 }
 
 //Função para excluir a relação de profissionais com o Filme
-const excluirProfissionalsIdFilme = async function (idFilme) {
+const excluirProfissionalIdFilme = async function (idFilme) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -302,5 +302,5 @@ module.exports = {
     buscarProfissionalIdFilme,
     buscarFilmesIdProfissional,
     excluirFilmeProfissional,
-    excluirProfissionalsIdFilme
+    excluirProfissionalIdFilme
 }

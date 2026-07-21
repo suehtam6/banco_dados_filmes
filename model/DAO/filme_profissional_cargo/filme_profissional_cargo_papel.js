@@ -124,7 +124,7 @@ const selectByIdFilmeProfissional = async function (id) {
 const selectProfissionalsByIdFilme = async function (idfilme) {
     try {
         // Script SQL para listar o filme de acordo com o ID.
-        let sql = `select tbl_profissional.*, tbl_cargo.cargo, tbl_papel.papel
+        let sql = `select tbl_profissional.*, tbl_cargo.cargo, tbl_papel.papel, tbl_nacionalidade.nacionalidade
                     from tbl_filme
                         inner join tbl_filme_profissional_cargo_papel
                             on tbl_filme.id = tbl_filme_profissional_cargo_papel.id_filme
@@ -134,6 +134,10 @@ const selectProfissionalsByIdFilme = async function (idfilme) {
                             on tbl_cargo.id = tbl_filme_profissional_cargo_papel.id_cargo
                         inner join tbl_papel
                             on tbl_papel.id = tbl_filme_profissional_cargo_papel.id_papel
+                        inner join tbl_profissional_nacionalidade
+                            on tbl_profissional.id = tbl_profissional_nacionalidade.id_profissional
+                        inner join tbl_nacionalidade
+                            on tbl_profissional_nacionalidade.id_nacionalidade
                     where tbl_filme.id=${idfilme};`
 
         let result = await knexConection.raw(sql)

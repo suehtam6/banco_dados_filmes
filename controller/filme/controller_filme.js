@@ -28,19 +28,19 @@ const inserirNovoFilme = async function (filme, contentType) {
     try {
         if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
             let validar = await validarDados(filme)
-            
+
             // Retorna um JSON de erro caso algum atributo seja inválido,
             // senão retorna um false(Não teve erro)
             if (validar) {
                 return validar // RETORNA UM 400
             } else {
-                
+
 
 
                 let tratarFilme = await tratarDados(await tratarDados(filme))
                 // Encaminha os dados fo Filme para o DAO inserir no banco de dados.
                 let result = await filmeDAO.insertFilme(tratarFilme)
-                
+
                 if (result) { // RETORNA UM 201
 
                     // Cria o ID do JSON do filme e adiciona o ID gerado no DAO
@@ -101,7 +101,7 @@ const inserirNovoFilme = async function (filme, contentType) {
 
 
     } catch (error) {
-        
+
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // RETORNA UM 500 (Controller)
     }
 
@@ -160,16 +160,22 @@ const atualizarFilme = async function (filme, id, contentType) {
                                     }
                                 }
 
+
+                            }
+
+                            let resultDeleteProfissional = await controllerFilmeProfissional.excluirProfissionalIdFilme(filme.id)
+                            if (resultDeleteProfissional.status) {
+
                                 // Manipulação de dados para inserir os profissionais relacionados ao filme.
                                 //Percorre o ARRAY de profissionais que chegará na requisição pelo objeto Filme
                                 for (itemProfissional of filme.profissional) {
 
 
                                     let filmeProfissional = {
-                                    "id_filme": filme.id,
-                                    "id_profissional": itemProfissional.id_profissional,
-                                    "id_cargo": itemProfissional.id_cargo,
-                                    "id_papel": itemProfissional.id_papel
+                                        "id_filme": filme.id,
+                                        "id_profissional": itemProfissional.id_profissional,
+                                        "id_cargo": itemProfissional.id_cargo,
+                                        "id_papel": itemProfissional.id_papel
                                     }
 
 
@@ -183,6 +189,8 @@ const atualizarFilme = async function (filme, id, contentType) {
 
 
                             }
+
+
 
 
                             customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
@@ -234,7 +242,7 @@ const listarFilme = async function () {
 
         // Validação para verificar se o DAO conseguiu processar o script no BD.
         if (result) {
-            
+
             // Validação para verificar se o conteúdo do ARRAY tem dados de retorno ou se está vazio
             if (result.length > 0) {
 
@@ -263,20 +271,16 @@ const listarFilme = async function () {
                     if (resultGeneros.status) {
                         filme.genero = resultGeneros.response.filme_genero
 
-                    // Aqui eu estou dizendo que se vier um 404 do gênero, ele não vai quebrar o codigo e vai continuar seguindo,
-                    // Assim o codigo vai sair seguir evitando  erros
-                    } else if(resultGeneros.status_code == 404){ 
-                        filme.genero = []
-                    }else {
+                        // Aqui eu estou dizendo que se vier um 404 do gênero, ele não vai quebrar o codigo e vai continuar seguindo,
+                        // Assim o codigo vai sair seguir evitando  erros
+                    } else {
                         return resultGeneros
                     }
 
-                   let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
+                    let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
 
                     if (resultProfissionalCargo.status) {
                         filme.profissional = resultProfissionalCargo.response.filme_profissional
-                    } else if (resultProfissionalCargo.status_code == 404) {
-                        filme.profissional = []
                     } else {
                         return resultProfissionalCargo
                     }
@@ -358,11 +362,11 @@ const buscarFilme = async function (id) {
 
                         let resultProfissionalCargo = await controllerFilmeProfissional.buscarProfissionalIdFilme(filme.id)
 
-                    if (resultProfissionalCargo.status) {
-                        filme.profissional = resultProfissionalCargo.response.filme_profissional
-                    } else {
-                        return resultProfissionalCargo
-                    }
+                        if (resultProfissionalCargo.status) {
+                            filme.profissional = resultProfissionalCargo.response.filme_profissional
+                        } else {
+                            return resultProfissionalCargo
+                        }
                     }
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
@@ -395,7 +399,7 @@ const excluirFilme = async function (id) {
         let resultBuscarFilme = await buscarFilme(id)
         if (resultBuscarFilme.status) {
             let result = await filmeDAO.deleteFilme(id)
-            
+
             if (result) {
 
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
